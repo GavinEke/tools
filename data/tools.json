@@ -19,5 +19,12 @@
     "description": "Generate secure random passwords with customizable length and character sets.",
     "path": "password-generator/index.html",
     "tags": ["security", "password", "generator", "cryptography"]
+  },
+  {
+    "id": "support-info",
+    "name": "Support Info",
+    "description": "Get system information, browser details, and network statistics for troubleshooting.",
+    "path": "support-info/index.html",
+    "tags": ["support", "system", "diagnostics", "info"]
   }
 ]
