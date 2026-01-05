@@ -5,5 +5,12 @@
     "description": "Upload a package-lock.json file to check for known vulnerabilities in your dependencies using the OSV database.",
     "path": "package-lock-vuln-checker/index.html",
     "tags": ["security", "npm", "audit", "vulnerabilities"]
+  },
+  {
+    "id": "subnet-calculator",
+    "name": "Subnet Calculator",
+    "description": "Calculate subnet masks, network addresses, and IP ranges for IPv4 networks.",
+    "path": "subnet-calculator/index.html",
+    "tags": ["network", "ip", "subnet", "calculator"]
   }
 ]
