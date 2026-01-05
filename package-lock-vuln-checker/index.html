@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Package Lock Vulnerability Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .drop-zone {
+            border: 2px dashed #bdc3c7;
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--secondary-color);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        .drop-zone i {
+            font-size: 3rem;
+            color: #bdc3c7;
+            margin-bottom: 1rem;
+        }
+
+        .drop-zone p {
+            color: #7f8c8d;
+            margin-bottom: 0.5rem;
+        }
+
+        .drop-zone .file-name {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-card .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .stat-card.total i { color: var(--secondary-color); }
+        .stat-card.vulnerable i { color: var(--danger-color); }
+        .stat-card.safe i { color: var(--success-color); }
+
+        .results-section {
+            display: none;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .chart-container h4 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .vuln-list {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .vuln-list h4 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .vuln-item {
+            border-left: 4px solid #e74c3c;
+            background: #fff5f5;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .vuln-item.severity-high {
+            border-left-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .vuln-item.severity-medium {
+            border-left-color: #f39c12;
+            background: #fffbf0;
+        }
+
+        .vuln-item.severity-low {
+            border-left-color: #3498db;
+            background: #f0f8ff;
+        }
+
+        .vuln-item.severity-critical {
+            border-left-color: #8e44ad;
+            background: #f5f0ff;
+        }
+
+        .vuln-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .vuln-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        .vuln-version {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .severity-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .severity-badge.critical {
+            background: #8e44ad;
+            color: white;
+        }
+
+        .severity-badge.high {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .severity-badge.medium {
+            background: #f39c12;
+            color: white;
+        }
+
+        .severity-badge.low {
+            background: #3498db;
+            color: white;
+        }
+
+        .cve-links {
+            margin-top: 0.75rem;
+        }
+
+        .cve-link {
+            display: inline-block;
+            margin-right: 1rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .cve-link:hover {
+            color: #1a5276;
+            text-decoration: underline;
+        }
+
+        .cve-link i {
+            margin-right: 0.25rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-container {
+            display: none;
+            margin-top: 1.5rem;
+        }
+
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+            background: #ecf0f1;
+        }
+
+        .progress-bar {
+            background: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            display: none;
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: #c00;
+        }
+
+        .cors-notice {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .cors-notice a {
+            color: #856404;
+        }
+
+        .no-vulns {
+            text-align: center;
+            padding: 3rem;
+            color: #27ae60;
+        }
+
+        .no-vulns i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 0;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .drop-zone {
+                padding: 2rem 1rem;
+            }
+
+            .stat-card .stat-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1><i class="fas fa-shield-alt"></i> Package Lock Vulnerability Checker</h1>
+            <p>Analyze your package-lock.json against the OSV vulnerability database</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="upload-section">
+            <div class="drop-zone" id="dropZone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Drag & drop your package-lock.json here</p>
+                <p class="file-name" id="fileName"></p>
+            </div>
+            <input type="file" id="fileInput" accept=".json">
+            <div class="progress-container" id="progressContainer">
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">Processing packages...</div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>Analyzing packages against OSV database...</p>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <div class="stats-grid">
+                <div class="stat-card total">
+                    <i class="fas fa-boxes"></i>
+                    <div class="stat-value" id="totalPackages">0</div>
+                    <div class="stat-label">Total Packages</div>
+                </div>
+                <div class="stat-card vulnerable">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div class="stat-value" id="vulnerablePackages">0</div>
+                    <div class="stat-label">Vulnerable</div>
+                </div>
+                <div class="stat-card safe">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="stat-value" id="safePackages">0</div>
+                    <div class="stat-label">Safe</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h4><i class="fas fa-chart-bar"></i> Severity Distribution</h4>
+                <canvas id="severityChart" height="100"></canvas>
+            </div>
+
+            <div class="vuln-list" id="vulnList">
+                <h4><i class="fas fa-bug"></i> Vulnerable Packages</h4>
+                <div id="vulnItems"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script>
+        const CORS_PROXY = 'https://corsproxy.io/?';
+
+        let severityChart = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file) processFile(file);
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) processFile(file);
+            });
+        });
+
+        function processFile(file) {
+            if (!file.name.endsWith('.json')) {
+                showError('Please upload a valid JSON file');
+                return;
+            }
+
+            document.getElementById('fileName').textContent = file.name;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const lockfile = JSON.parse(e.target.result);
+                    processLockfile(lockfile);
+                } catch (err) {
+                    showError('Invalid JSON file: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        async function processLockfile(lockfile) {
+            hideError();
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+
+            const packages = extractPackages(lockfile);
+            const totalPackages = packages.length;
+
+            document.getElementById('totalPackages').textContent = totalPackages;
+
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            progressContainer.style.display = 'block';
+
+            const vulnerabilities = [];
+            const batchSize = 100;
+
+            for (let i = 0; i < packages.length; i += batchSize) {
+                const batch = packages.slice(i, i + batchSize);
+                const batchResults = await checkPackagesBatch(batch);
+
+                batchResults.forEach((vulns, idx) => {
+                    if (vulns.length > 0) {
+                        vulns.forEach(v => {
+                            vulnerabilities.push({
+                                name: batch[idx].name,
+                                version: batch[idx].version,
+                                id: v.id,
+                                severity: v.severity,
+                                title: v.title
+                            });
+                        });
+                    }
+                });
+
+                const progress = Math.min(((i + batchSize) / packages.length) * 100, 100);
+                progressBar.style.width = progress + '%';
+                progressText.textContent = `Checking packages ${Math.min(i + batchSize, packages.length)} of ${packages.length}...`;
+            }
+
+            progressContainer.style.display = 'none';
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressText.textContent = 'Fetching vulnerability details...';
+
+            await fetchVulnDetails(vulnerabilities);
+
+            progressContainer.style.display = 'none';
+            document.getElementById('loading').style.display = 'none';
+
+            displayResults(packages.length, vulnerabilities);
+        }
+
+        async function fetchVulnDetails(vulnerabilities) {
+            const uniqueVulnIds = [...new Set(vulnerabilities.map(v => v.id))];
+
+            for (let i = 0; i < uniqueVulnIds.length; i += 100) {
+                const batch = uniqueVulnIds.slice(i, i + 100);
+                const details = await Promise.all(batch.map(id => fetchVulnDetail(id)));
+
+                batch.forEach((vulnId, idx) => {
+                    if (details[idx]) {
+                        const vulnsWithId = vulnerabilities.filter(v => v.id === vulnId);
+                        vulnsWithId.forEach(v => {
+                            v.severity = getSeverity(details[idx]);
+                            v.title = details[idx].summary || 'No summary available';
+                            v.modified = details[idx].modified;
+                            v.aliases = details[idx].aliases || [];
+                        });
+                    }
+                });
+
+                const progress = Math.min(((i + 100) / uniqueVulnIds.length) * 100, 100);
+                progressBar.style.width = progress + '%';
+            }
+        }
+
+        async function fetchVulnDetail(vulnId) {
+            try {
+                const url = CORS_PROXY + encodeURIComponent(`https://api.osv.dev/v1/vulns/${vulnId}`);
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    console.warn(`Failed to fetch vuln details for ${vulnId}: ${response.status}`);
+                    return null;
+                }
+
+                return await response.json();
+            } catch (err) {
+                console.warn(`Error fetching vuln ${vulnId}:`, err.message);
+                return null;
+            }
+        }
+
+        function extractPackages(lockfile) {
+            const packages = new Map();
+
+            if (lockfile.packages) {
+                for (const [path, pkg] of Object.entries(lockfile.packages)) {
+                    if (pkg.version) {
+                        let name = path;
+                        if (path.startsWith('node_modules/')) {
+                            name = path.replace(/^node_modules\//, '');
+                        }
+                        if (name && name !== '') {
+                            const cleanVersion = pkg.version.replace(/^[^0-9]*/, '');
+                            packages.set(name, cleanVersion);
+                        }
+                    }
+                }
+            }
+
+            if (lockfile.dependencies) {
+                for (const [name, pkg] of Object.entries(lockfile.dependencies)) {
+                    if (pkg.version) {
+                        const cleanVersion = pkg.version.replace(/^[^0-9]*/, '');
+                        packages.set(name, cleanVersion);
+                    }
+                }
+            }
+
+            return Array.from(packages.entries()).map(([name, version]) => ({
+                name,
+                version
+            }));
+        }
+
+        async function checkPackagesBatch(packages) {
+            try {
+                const queries = packages.map(pkg => ({
+                    package: {
+                        name: pkg.name,
+                        ecosystem: 'npm'
+                    },
+                    version: pkg.version
+                }));
+
+                const payload = { queries };
+
+                const url = CORS_PROXY + encodeURIComponent(`https://api.osv.dev/v1/querybatch`);
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    console.warn(`Batch API request failed: ${response.status}`);
+                    return packages.map(() => []);
+                }
+
+                const data = await response.json();
+
+                if (!data.results) {
+                    return packages.map(() => []);
+                }
+
+                return data.results.map(result => {
+                    if (result.vulns && result.vulns.length > 0) {
+                        return result.vulns.map(v => ({
+                            id: v.id,
+                            severity: null,
+                            title: null
+                        }));
+                    }
+                    return [];
+                });
+            } catch (err) {
+                console.warn(`Error checking batch:`, err.message);
+                return packages.map(() => []);
+            }
+        }
+
+        function getSeverity(vuln) {
+            const severityValue = vuln.database_specific?.severity || (Array.isArray(vuln.severity) ? null : vuln.severity);
+            if (!severityValue) {
+                return 'medium';
+            }
+
+            const severity = severityValue.toLowerCase();
+            if (severity.includes('critical')) return 'critical';
+            if (severity.includes('high')) return 'high';
+            if (severity.includes('medium') || severity.includes('moderate')) return 'medium';
+            return 'low';
+        }
+
+        function displayResults(totalPackages, vulnerabilities) {
+            const uniqueVulnerablePackages = new Set(vulnerabilities.map(v => v.name)).size;
+            const vulnerablePackages = vulnerabilities.length;
+
+            document.getElementById('vulnerablePackages').textContent = uniqueVulnerablePackages;
+            document.getElementById('safePackages').textContent = totalPackages - uniqueVulnerablePackages;
+
+            document.getElementById('resultsSection').style.display = 'block';
+
+            displaySeverityChart(vulnerabilities);
+            displayVulnerabilityList(vulnerabilities);
+
+            if (vulnerabilities.length === 0) {
+                document.getElementById('vulnItems').innerHTML = `
+                    <div class="no-vulns">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>No vulnerabilities found!</h3>
+                        <p>All packages in your lockfile appear to be safe.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function displaySeverityChart(vulnerabilities) {
+            const severityCounts = {
+                critical: 0,
+                high: 0,
+                medium: 0,
+                low: 0
+            };
+
+            vulnerabilities.forEach(v => {
+                if (severityCounts.hasOwnProperty(v.severity)) {
+                    severityCounts[v.severity]++;
+                } else {
+                    severityCounts.medium++;
+                }
+            });
+
+            const ctx = document.getElementById('severityChart').getContext('2d');
+
+            if (severityChart) {
+                severityChart.destroy();
+            }
+
+            severityChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Critical', 'High', 'Medium', 'Low'],
+                    datasets: [{
+                        label: 'Number of Vulnerabilities',
+                        data: [
+                            severityCounts.critical,
+                            severityCounts.high,
+                            severityCounts.medium,
+                            severityCounts.low
+                        ],
+                        backgroundColor: [
+                            '#8e44ad',
+                            '#e74c3c',
+                            '#f39c12',
+                            '#3498db'
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            },
+                            grid: {
+                                color: '#ecf0f1'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function displayVulnerabilityList(vulnerabilities) {
+            const container = document.getElementById('vulnItems');
+
+            if (vulnerabilities.length === 0) {
+                container.innerHTML = `
+                    <div class="no-vulns">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>No vulnerabilities found!</h3>
+                        <p>All packages in your lockfile appear to be safe.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = vulnerabilities.map(v => {
+                const aliases = v.aliases || [];
+                const cveId = aliases.find(a => a.startsWith('CVE-'));
+
+                return `
+                <div class="vuln-item severity-${v.severity}">
+                    <div class="vuln-header">
+                        <div>
+                            <span class="vuln-name">${escapeHtml(v.name)}</span>
+                            <span class="vuln-version">@ ${escapeHtml(v.version)}</span>
+                        </div>
+                        <span class="severity-badge ${v.severity}">${v.severity}</span>
+                    </div>
+                    <p style="margin-bottom: 0.5rem; color: #555;">${escapeHtml(v.title)}</p>
+                    <div class="cve-links">
+                        <a href="https://osv.dev/vulnerability/${v.id}" target="_blank" class="cve-link">
+                            <i class="fas fa-shield-alt"></i> OSV Details
+                        </a>
+                        ${cveId ? `
+                        <a href="https://nvd.nist.gov/vuln/detail/${cveId}" target="_blank" class="cve-link">
+                            <i class="fas fa-external-link-alt"></i> ${cveId}
+                        </a>
+                        ` : ''}
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+    </script>
+
+    <footer style="background: #2c3e50; color: white; padding: 2rem 0; margin-top: 3rem;">
+        <div class="container" style="text-align: center;">
+            <a href="../index.html" style="color: #3498db; text-decoration: none; font-size: 1.1rem;">
+                <i class="fas fa-arrow-left"></i> Back to All Tools
+            </a>
+        </div>
+    </footer>
+</body>
+</html>

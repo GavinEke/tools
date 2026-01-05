@@ -1,0 +1,9 @@
+[
+  {
+    "id": "package-lock-vuln-checker",
+    "name": "Package-Lock.json Vulnerability Checker",
+    "description": "Upload a package-lock.json file to check for known vulnerabilities in your dependencies using the OSV database.",
+    "path": "package-lock-vuln-checker/index.html",
+    "tags": ["security", "npm", "audit", "vulnerabilities"]
+  }
+]
