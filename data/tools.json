@@ -12,5 +12,12 @@
     "description": "Calculate subnet masks, network addresses, and IP ranges for IPv4 networks.",
     "path": "subnet-calculator/index.html",
     "tags": ["network", "ip", "subnet", "calculator"]
+  },
+  {
+    "id": "password-generator",
+    "name": "Password Generator",
+    "description": "Generate secure random passwords with customizable length and character sets.",
+    "path": "password-generator/index.html",
+    "tags": ["security", "password", "generator", "cryptography"]
   }
 ]
