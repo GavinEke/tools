@@ -1,82 +1,123 @@
-document.addEventListener('DOMContentLoaded', function() {
-  const searchInput = document.getElementById('search');
-  const toolsList = document.getElementById('tools-list');
-  const loadingIndicator = document.getElementById('loading');
+let tools = [];
 
-  let allTools = [];
-
-  fetch('data/tools.json')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to load tools data');
-      }
-      return response.json();
-    })
-    .then(tools => {
-      allTools = tools;
-      renderTools(tools);
-      loadingIndicator.style.display = 'none';
-    })
-    .catch(error => {
-      console.error('Error loading tools:', error);
-      if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
-        loadingIndicator.innerHTML = 'Unable to load tools. <br><br><strong>Note:</strong> This website requires a web server to function properly (browsers block fetch() requests when opening files directly). <br><br>To view locally, run: <code>python3 -m http.server 8080</code> in this directory, then open <a href="http://localhost:8080">http://localhost:8080</a>';
-      } else {
-        loadingIndicator.textContent = 'Error loading tools. Please refresh the page.';
-      }
-    });
-
-  searchInput.addEventListener('input', debounce(function(e) {
-    const query = e.target.value.toLowerCase().trim();
-    const filtered = filterTools(allTools, query);
-    renderTools(filtered);
-  }, 300));
-
-  function filterTools(tools, query) {
-    if (!query) {
-      return tools;
-    }
-
-    return tools.filter(tool => {
-      const nameMatch = tool.name.toLowerCase().includes(query);
-      const descMatch = tool.description.toLowerCase().includes(query);
-      const tagMatch = tool.tags.some(tag => tag.toLowerCase().includes(query));
-      return nameMatch || descMatch || tagMatch;
-    });
+async function loadTools() {
+  try {
+    const response = await fetch('data/tools.json');
+    tools = await response.json();
+  } catch (error) {
+    console.error('Failed to load tools:', error);
   }
+}
 
-  function renderTools(tools) {
-    if (tools.length === 0) {
-      toolsList.innerHTML = '<div class="no-results">No tools found matching your search.</div>';
-      return;
-    }
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
 
-    toolsList.innerHTML = tools.map(tool => `
-      <a href="${tool.path}" class="tool-card">
-        <h3>${escapeHtml(tool.name)}</h3>
-        <p>${escapeHtml(tool.description)}</p>
-        <div class="tool-tags">
-          ${tool.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+function createToolCard(tool) {
+  return `
+    <div class="col-md-6 col-lg-4" data-name="${tool.name.toLowerCase()}" data-description="${tool.description.toLowerCase()}" data-category="${tool.category.toLowerCase()}">
+      <a href="${tool.href}" class="card tool-card h-100 text-decoration-none">
+        <div class="card-body">
+          <div class="tool-icon mb-3">${tool.icon}</div>
+          <h3 class="h5 card-title fw-semibold">${tool.name}</h3>
+          <p class="card-text text-body-secondary">${tool.description}</p>
         </div>
       </a>
-    `).join('');
-  }
+    </div>
+  `;
+}
 
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
+function createRecentToolCard(tool) {
+  return `
+    <div class="col-md-6 col-lg-4 col-xl">
+      <a href="${tool.href}" class="card tool-card h-100 text-decoration-none">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div class="tool-icon">${tool.icon}</div>
+            <span class="badge bg-light text-body-secondary small">${formatDate(tool.dateAdded)}</span>
+          </div>
+          <h3 class="h6 card-title fw-semibold mb-1">${tool.name}</h3>
+          <p class="card-text text-body-secondary small mb-0">${tool.description}</p>
+        </div>
+      </a>
+    </div>
+  `;
+}
 
-  function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
+function initRecentlyAdded() {
+  const recentContainer = document.getElementById('recent-tools');
+  const sortedTools = [...tools].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const recentTools = sortedTools.slice(0, 5);
+  recentContainer.innerHTML = recentTools.map(createRecentToolCard).join('');
+}
+
+function initAllTools() {
+  const allToolsContainer = document.getElementById('all-tools');
+  allToolsContainer.innerHTML = tools.map(createToolCard).join('');
+}
+
+function filterTools(query) {
+  const lowerQuery = query.toLowerCase().trim();
+  const allToolCards = document.querySelectorAll('#all-tools > div');
+  const allToolsSection = document.querySelector('section:nth-of-type(2) h2');
+  const noResults = document.getElementById('no-results');
+  const resultsCount = document.getElementById('search-results-count');
+  const recentSection = document.getElementById('recent-section');
+
+  let visibleCount = 0;
+
+  allToolCards.forEach(card => {
+    const name = card.dataset.name || '';
+    const description = card.dataset.description || '';
+    const category = card.dataset.category || '';
+    const matches = !lowerQuery || name.includes(lowerQuery) || description.toLowerCase().includes(lowerQuery) || category.includes(lowerQuery);
+    card.style.display = matches ? '' : 'none';
+    if (matches) visibleCount++;
+  });
+
+  if (lowerQuery) {
+    recentSection.style.display = 'none';
+    allToolsSection.textContent = `Search Results (${visibleCount})`;
+    noResults.classList.toggle('d-none', visibleCount > 0);
+    resultsCount.textContent = visibleCount === tools.length ? '' : `Showing ${visibleCount} of ${tools.length} tools`;
+  } else {
+    recentSection.style.display = '';
+    allToolsSection.textContent = 'All Tools';
+    noResults.classList.add('d-none');
+    resultsCount.textContent = '';
   }
-});
+}
+
+function initSearch() {
+  const searchInput = document.getElementById('tool-search');
+  const clearBtn = document.getElementById('clear-search');
+
+  searchInput.addEventListener('input', () => {
+    const hasValue = searchInput.value.length > 0;
+    clearBtn.classList.toggle('d-none', !hasValue);
+    filterTools(searchInput.value);
+  });
+
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearBtn.classList.add('d-none');
+    filterTools('');
+    searchInput.focus();
+  });
+
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      searchInput.value = '';
+      clearBtn.classList.add('d-none');
+      filterTools('');
+    }
+  });
+}
+
+(async () => {
+  await loadTools();
+  initRecentlyAdded();
+  initAllTools();
+  initSearch();
+})();

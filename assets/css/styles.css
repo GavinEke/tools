@@ -1,137 +1,153 @@
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --card-border: #e5e7eb;
+  --card-hover-bg: #f8fafc;
+  --text-muted: #6b7280;
+  --footer-bg: #f1f5f9;
+}
+
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-  background-color: #f5f5f5;
-  color: #333;
-  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+main {
+  flex: 1;
 }
 
-header {
-  text-align: center;
-  padding: 40px 20px;
-  background: #fff;
-  border-bottom: 1px solid #e0e0e0;
-  margin-bottom: 30px;
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-header h1 {
-  font-size: 2.5rem;
-  color: #2c3e50;
-  margin-bottom: 10px;
+.navbar-brand svg {
+  opacity: 0.9;
 }
 
-header p {
-  color: #666;
-  font-size: 1.1rem;
+.nav-link {
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
 }
 
-.search-container {
-  max-width: 600px;
-  margin: 0 auto 30px;
-  padding: 0 20px;
-}
-
-#search {
-  width: 100%;
-  padding: 15px 20px;
-  font-size: 1.1rem;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  transition: border-color 0.3s ease;
-}
-
-#search:focus {
-  outline: none;
-  border-color: #3498db;
-}
-
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 20px;
-  padding: 20px;
+.nav-link:hover {
+  opacity: 1;
 }
 
 .tool-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 25px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-decoration: none;
-  color: inherit;
-  display: block;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background-color: #fff;
+  transition: all 0.2s ease;
 }
 
 .tool-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+  border-color: var(--primary-color);
+  background-color: var(--card-hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.tool-card h3 {
-  font-size: 1.3rem;
-  color: #2c3e50;
-  margin-bottom: 10px;
-}
-
-.tool-card p {
-  color: #666;
-  margin-bottom: 15px;
-}
-
-.tool-tags {
+.tool-icon {
+  width: 48px;
+  height: 48px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  background-color: #eff6ff;
+  color: var(--primary-color);
+  border-radius: 10px;
 }
 
-.tag {
-  background: #e8f4f8;
-  color: #3498db;
-  padding: 4px 10px;
-  border-radius: 15px;
-  font-size: 0.85rem;
-}
-
-.no-results {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-  font-size: 1.1rem;
-}
-
-.back-link {
-  display: inline-block;
-  padding: 10px 20px;
-  background: #3498db;
+.tool-card:hover .tool-icon {
+  background-color: var(--primary-color);
   color: #fff;
+}
+
+.card-title {
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+footer {
+  background-color: var(--footer-bg);
+  border-top: 1px solid var(--card-border);
+}
+
+footer a {
   text-decoration: none;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  transition: background 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 
-.back-link:hover {
-  background: #2980b9;
+footer a:hover {
+  opacity: 0.7;
 }
 
-@media (max-width: 600px) {
-  .tools-grid {
-    grid-template-columns: 1fr;
+code {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', 'Source Code Pro', monospace;
+  font-size: 0.85rem;
+  background-color: #f8fafc;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+}
+
+.table th {
+  font-weight: 500;
+  color: #4b5563;
+  border-bottom-width: 1px;
+}
+
+.table td {
+  color: #1f2937;
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
-  header h1 {
-    font-size: 1.8rem;
+  .display-5 {
+    font-size: 1.75rem;
   }
+
+  .lead {
+    font-size: 1rem;
+  }
+}
+
+.severity-critical,
+.bg-severity-critical {
+  background-color: #7c3aed !important;
+  color: #fff !important;
+}
+
+.severity-high,
+.bg-severity-high {
+  background-color: #dc2626 !important;
+  color: #fff !important;
+}
+
+.severity-medium,
+.bg-severity-medium {
+  background-color: #ea580c !important;
+  color: #fff !important;
+}
+
+.severity-low,
+.bg-severity-low {
+  background-color: #0284c7 !important;
+  color: #fff !important;
 }

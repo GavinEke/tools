@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Subnet Calculator - tools.gavin.cloud</title>
+    <title>IP Info - tools.gavin.cloud</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css" integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/assets/css/styles.css">
   </head>
@@ -35,116 +35,125 @@
     </nav>
 
     <main class="container py-5">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div class="mb-4">
-            <h1 class="display-5 fw-bold text-body-emphasis">Subnet Calculator</h1>
-            <p class="text-body-secondary">Calculate network addresses, broadcast addresses, subnet masks, and usable host ranges.</p>
-          </div>
+      <div class="mb-4">
+        <h1 class="display-5 fw-bold text-body-emphasis">IP Info</h1>
+        <p class="text-body-secondary">Look up geographic and network information for IP addresses.</p>
+      </div>
 
-          <form id="subnet-form" class="card mb-4">
-            <div class="card-body">
-              <div class="row g-3 align-items-end">
-                <div class="col-md-8">
-                  <label for="ip-address" class="form-label fw-medium">IP Address</label>
-                  <input type="text" class="form-control" id="ip-address" placeholder="192.168.1.1" required>
-                </div>
-                <div class="col-md-4">
-                  <label for="cidr" class="form-label fw-medium">CIDR</label>
-                  <select class="form-select" id="cidr">
-                    <option value="8">/8 (255.0.0.0)</option>
-                    <option value="9">/9 (255.128.0.0)</option>
-                    <option value="10">/10 (255.192.0.0)</option>
-                    <option value="11">/11 (255.224.0.0)</option>
-                    <option value="12">/12 (255.240.0.0)</option>
-                    <option value="13">/13 (255.248.0.0)</option>
-                    <option value="14">/14 (255.252.0.0)</option>
-                    <option value="15">/15 (255.254.0.0)</option>
-                    <option value="16" selected>/16 (255.255.0.0)</option>
-                    <option value="17">/17 (255.255.128.0)</option>
-                    <option value="18">/18 (255.255.192.0)</option>
-                    <option value="19">/19 (255.255.224.0)</option>
-                    <option value="20">/20 (255.255.240.0)</option>
-                    <option value="21">/21 (255.255.248.0)</option>
-                    <option value="22">/22 (255.255.252.0)</option>
-                    <option value="23">/23 (255.255.254.0)</option>
-                    <option value="24">/24 (255.255.255.0)</option>
-                    <option value="25">/25 (255.255.255.128)</option>
-                    <option value="26">/26 (255.255.255.192)</option>
-                    <option value="27">/27 (255.255.255.224)</option>
-                    <option value="28">/28 (255.255.255.240)</option>
-                    <option value="29">/29 (255.255.255.248)</option>
-                    <option value="30">/30 (255.255.255.252)</option>
-                    <option value="31">/31 (255.255.255.254)</option>
-                    <option value="32">/32 (255.255.255.255)</option>
-                  </select>
-                </div>
-              </div>
-              <div class="mt-3 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Calculate</button>
-                <button type="button" class="btn btn-outline-secondary" id="clear-btn">Clear</button>
-              </div>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-8">
+              <label for="ip-input" class="form-label fw-medium">IP Address</label>
+              <input type="text" class="form-control" id="ip-input" placeholder="Enter IP address (e.g., 8.8.8.8)">
+              <div class="form-text">Leave empty to look up your current IP</div>
             </div>
-          </form>
+            <div class="col-md-4">
+              <button type="button" class="btn btn-primary w-100" id="lookup-btn">Look Up</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-          <div id="results" class="d-none">
-            <div class="card">
+      <div id="loading" class="text-center py-5 d-none">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3 text-body-secondary">Looking up IP information...</p>
+      </div>
+
+      <div id="error" class="alert alert-danger d-none"></div>
+
+      <div id="results" class="d-none">
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card h-100">
               <div class="card-header bg-transparent py-3">
-                <h2 class="h5 mb-0 fw-semibold">Subnet Information</h2>
+                <h2 class="h5 mb-0 fw-semibold">Network</h2>
               </div>
               <div class="card-body p-0">
                 <table class="table table-hover mb-0">
                   <tbody>
                     <tr>
-                      <th scope="row" class="w-25 ps-4">Network Address</th>
-                      <td class="fw-medium" id="result-network"></td>
+                      <th scope="row" class="ps-4">IP Address</th>
+                      <td class="fw-medium" id="result-ip"></td>
                     </tr>
                     <tr>
-                      <th scope="row" class="ps-4">Broadcast Address</th>
-                      <td class="fw-medium" id="result-broadcast"></td>
+                      <th scope="row" class="ps-4">Version</th>
+                      <td id="result-version"></td>
                     </tr>
                     <tr>
-                      <th scope="row" class="ps-4">Subnet Mask</th>
-                      <td class="fw-medium" id="result-mask"></td>
+                      <th scope="row" class="ps-4">Hostname</th>
+                      <td id="result-hostname"></td>
                     </tr>
                     <tr>
-                      <th scope="row" class="ps-4">Wildcard Mask</th>
-                      <td class="fw-medium" id="result-wildcard"></td>
+                      <th scope="row" class="ps-4">ASN</th>
+                      <td id="result-asn"></td>
                     </tr>
                     <tr>
-                      <th scope="row" class="ps-4">Usable Host Range</th>
-                      <td class="fw-medium" id="result-range"></td>
+                      <th scope="row" class="ps-4">ISP</th>
+                      <td id="result-isp"></td>
                     </tr>
                     <tr>
-                      <th scope="row" class="ps-4">Number of Hosts</th>
-                      <td class="fw-medium" id="result-hosts"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="ps-4">Usable Hosts</th>
-                      <td class="fw-medium" id="result-usable"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="ps-4">IP Class</th>
-                      <td class="fw-medium" id="result-class"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="ps-4">Address Type</th>
-                      <td class="fw-medium" id="result-type"></td>
+                      <th scope="row" class="ps-4">Organization</th>
+                      <td id="result-org"></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
+          </div>
 
-            <div class="card mt-4">
+          <div class="col-lg-6">
+            <div class="card h-100">
               <div class="card-header bg-transparent py-3">
-                <h2 class="h5 mb-0 fw-semibold">Binary Representation</h2>
+                <h2 class="h5 mb-0 fw-semibold">Location</h2>
               </div>
-              <div class="card-body">
-                <code id="result-binary-ip" class="d-block mb-2"></code>
-                <code id="result-binary-mask" class="d-block mb-2"></code>
-                <code id="result-binary-network"></code>
+              <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                  <tbody>
+                    <tr>
+                      <th scope="row" class="ps-4">Country</th>
+                      <td id="result-country"></td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="ps-4">Region</th>
+                      <td id="result-region"></td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="ps-4">City</th>
+                      <td id="result-city"></td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="ps-4">Postal Code</th>
+                      <td id="result-postal"></td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="ps-4">Timezone</th>
+                      <td id="result-timezone"></td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="ps-4">UTC Offset</th>
+                      <td id="result-utc-offset"></td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="ps-4">Coordinates</th>
+                      <td id="result-coords"></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-4">
+          <div class="card-header bg-transparent py-3">
+            <h2 class="h5 mb-0 fw-semibold">Map</h2>
+          </div>
+          <div class="card-body">
+            <div id="map-container" class="ratio ratio-16x9 bg-light rounded">
+              <iframe id="map-frame" style="border:0; width:100%; height:100%;" allowfullscreen loading="lazy" referrerpolicy="no-referrer"></iframe>
             </div>
           </div>
         </div>
@@ -174,6 +183,6 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js" integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./subnet-calculator.js"></script>
+    <script src="./ip-info.js"></script>
   </body>
 </html>

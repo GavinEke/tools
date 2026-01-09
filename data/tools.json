@@ -1,30 +1,7 @@
 [
-  {
-    "id": "package-lock-vuln-checker",
-    "name": "Package-Lock.json Vulnerability Checker",
-    "description": "Upload a package-lock.json file to check for known vulnerabilities in your dependencies using the OSV database.",
-    "path": "package-lock-vuln-checker/index.html",
-    "tags": ["security", "npm", "audit", "vulnerabilities"]
-  },
-  {
-    "id": "subnet-calculator",
-    "name": "Subnet Calculator",
-    "description": "Calculate subnet masks, network addresses, and IP ranges for IPv4 networks.",
-    "path": "subnet-calculator/index.html",
-    "tags": ["network", "ip", "subnet", "calculator"]
-  },
-  {
-    "id": "password-generator",
-    "name": "Password Generator",
-    "description": "Generate secure random passwords with customizable length and character sets.",
-    "path": "password-generator/index.html",
-    "tags": ["security", "password", "generator", "cryptography"]
-  },
-  {
-    "id": "support-info",
-    "name": "Support Info",
-    "description": "Get system information, browser details, and network statistics for troubleshooting.",
-    "path": "support-info/index.html",
-    "tags": ["support", "system", "diagnostics", "info"]
-  }
+  { "name": "Package Lock Checker", "href": "package-lock-checker/", "dateAdded": "2026-01-05", "dateUpdated": "2026-01-09", "category": "Security", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412l-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287h.578l-.326-.834zm-4.017-5.05c0-.598-.234-1.063-.617-1.417H9.08c.226.47.422.94.586 1.446l1.768 4.028c-.063-.027-.123-.054-.19-.081a2.97 2.97 0 0 1-.19.081l-1.77-4.029c.395-.373.61-.818.61-1.416z\"/></svg>", "description": "Check your package-lock.json for known security vulnerabilities using the OSV database." },
+  { "name": "Subnet Calculator", "href": "subnet-calculator/", "dateAdded": "2026-01-05", "dateUpdated": "2026-01-08", "category": "Network", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 1 1 0-2h6V1a1 1 0 0 1 1-1z\"/></svg>", "description": "Calculate network addresses, broadcast addresses, subnet masks, and usable host ranges." },
+  { "name": "Password Generator", "href": "password-generator/", "dateAdded": "2026-01-05", "dateUpdated": "2026-01-08", "category": "Security", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z\"/></svg>", "description": "Generate secure, random passwords with customizable length and character options." },
+  { "name": "Support Info", "href": "support-info/", "dateAdded": "2026-01-05", "dateUpdated": "2026-01-08", "category": "System", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z\"/></svg>", "description": "View browser and system information useful for troubleshooting and support requests." },
+  { "name": "IP Info", "href": "ip-info/", "dateAdded": "2026-01-05", "dateUpdated": "2026-01-08", "category": "Network", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z\"/><path d=\"M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z\"/></svg>", "description": "Look up geographic and network information for IP addresses." }
 ]
