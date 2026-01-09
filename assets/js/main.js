@@ -47,7 +47,7 @@ function createRecentToolCard(tool) {
 
 function initRecentlyAdded() {
   const recentContainer = document.getElementById('recent-tools');
-  const sortedTools = [...tools].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const sortedTools = [...tools].sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
   const recentTools = sortedTools.slice(0, 5);
   recentContainer.innerHTML = recentTools.map(createRecentToolCard).join('');
 }
