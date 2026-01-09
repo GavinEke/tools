@@ -179,12 +179,8 @@
 
     hideLoading();
 
-    console.log('All results:', allResults);
     const vulnerablePackages = allResults.filter(r => {
       const hasVulns = r.vulns && r.vulns.length > 0;
-      if (hasVulns) {
-        console.log(`Found vulnerabilities for ${r.name}@${r.version}:`, r.vulns);
-      }
       return hasVulns;
     });
     const safeCount = allResults.length - vulnerablePackages.length;
@@ -289,13 +285,6 @@
     }
 
     document.getElementById('vulnerabilities').classList.remove('d-none');
-
-    if (window.location.search.includes('debug=1')) {
-      const debugEl = document.createElement('div');
-      debugEl.className = 'mt-4 p-3 bg-light rounded';
-      debugEl.innerHTML = `<h6>Debug Info:</h6><pre>${JSON.stringify(allResults, null, 2)}</pre>`;
-      document.getElementById('vulnerabilities').appendChild(debugEl);
-    }
   }
 
   function clearAll() {
