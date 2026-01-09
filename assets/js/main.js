@@ -45,11 +45,37 @@ function createRecentToolCard(tool) {
   `;
 }
 
+function createUpdatedToolCard(tool) {
+  return `
+    <div class="col-md-6 col-lg-4 col-xl">
+      <a href="${tool.href}" class="card tool-card h-100 text-decoration-none">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div class="tool-icon">${tool.icon}</div>
+            <span class="badge bg-light text-body-secondary small">${formatDate(tool.dateUpdated)}</span>
+          </div>
+          <h3 class="h6 card-title fw-semibold mb-1">${tool.name}</h3>
+          <p class="card-text text-body-secondary small mb-0">${tool.description}</p>
+        </div>
+      </a>
+    </div>
+  `;
+}
+
 function initRecentlyAdded() {
   const recentContainer = document.getElementById('recent-tools');
   const sortedTools = [...tools].sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
   const recentTools = sortedTools.slice(0, 5);
   recentContainer.innerHTML = recentTools.map(createRecentToolCard).join('');
+}
+
+function initRecentlyUpdated() {
+  const updatedContainer = document.getElementById('updated-tools');
+  const updatedTools = tools
+    .filter(t => t.dateUpdated)
+    .sort((a, b) => new Date(b.dateUpdated) - new Date(a.dateUpdated))
+    .slice(0, 5);
+  updatedContainer.innerHTML = updatedTools.map(createUpdatedToolCard).join('');
 }
 
 function initAllTools() {
@@ -60,10 +86,11 @@ function initAllTools() {
 function filterTools(query) {
   const lowerQuery = query.toLowerCase().trim();
   const allToolCards = document.querySelectorAll('#all-tools > div');
-  const allToolsSection = document.querySelector('section:nth-of-type(2) h2');
+  const allToolsSection = document.querySelector('section:nth-of-type(3) h2');
   const noResults = document.getElementById('no-results');
   const resultsCount = document.getElementById('search-results-count');
   const recentSection = document.getElementById('recent-section');
+  const updatedSection = document.getElementById('updated-section');
 
   let visibleCount = 0;
 
@@ -78,11 +105,13 @@ function filterTools(query) {
 
   if (lowerQuery) {
     recentSection.style.display = 'none';
+    updatedSection.style.display = 'none';
     allToolsSection.textContent = `Search Results (${visibleCount})`;
     noResults.classList.toggle('d-none', visibleCount > 0);
     resultsCount.textContent = visibleCount === tools.length ? '' : `Showing ${visibleCount} of ${tools.length} tools`;
   } else {
     recentSection.style.display = '';
+    updatedSection.style.display = '';
     allToolsSection.textContent = 'All Tools';
     noResults.classList.add('d-none');
     resultsCount.textContent = '';
@@ -118,6 +147,7 @@ function initSearch() {
 (async () => {
   await loadTools();
   initRecentlyAdded();
+  initRecentlyUpdated();
   initAllTools();
   initSearch();
 })();
