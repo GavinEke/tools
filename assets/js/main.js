@@ -19,8 +19,10 @@ function createToolCard(tool) {
     <div class="col-md-6 col-lg-4" data-name="${tool.name.toLowerCase()}" data-description="${tool.description.toLowerCase()}" data-category="${tool.category.toLowerCase()}">
       <a href="${tool.href}" class="card tool-card h-100 text-decoration-none">
         <div class="card-body">
-          <div class="tool-icon mb-3">${tool.icon}</div>
-          <h3 class="h5 card-title fw-semibold">${tool.name}</h3>
+          <div class="d-flex align-items-center mb-3">
+            <div class="tool-icon me-3">${tool.icon}</div>
+            <h3 class="h5 card-title fw-semibold mb-0">${tool.name}</h3>
+          </div>
           <p class="card-text text-body-secondary">${tool.description}</p>
         </div>
       </a>
@@ -78,12 +80,14 @@ function initRecentlyUpdated() {
   updatedContainer.innerHTML = updatedTools.map(createUpdatedToolCard).join('');
 }
 
-function initAllTools() {
+function initAllTools(totalTools) {
   const allToolsContainer = document.getElementById('all-tools');
   allToolsContainer.innerHTML = tools.map(createToolCard).join('');
+  const allToolsSection = document.querySelector('section:nth-of-type(3) h2');
+  allToolsSection.textContent = `All Tools (${totalTools})`;
 }
 
-function filterTools(query) {
+function filterTools(query, totalTools) {
   const lowerQuery = query.toLowerCase().trim();
   const allToolCards = document.querySelectorAll('#all-tools > div');
   const allToolsSection = document.querySelector('section:nth-of-type(3) h2');
@@ -112,26 +116,26 @@ function filterTools(query) {
   } else {
     recentSection.style.display = '';
     updatedSection.style.display = '';
-    allToolsSection.textContent = 'All Tools';
+    allToolsSection.textContent = `All Tools (${totalTools})`;
     noResults.classList.add('d-none');
     resultsCount.textContent = '';
   }
 }
 
-function initSearch() {
+function initSearch(totalTools) {
   const searchInput = document.getElementById('tool-search');
   const clearBtn = document.getElementById('clear-search');
 
   searchInput.addEventListener('input', () => {
     const hasValue = searchInput.value.length > 0;
     clearBtn.classList.toggle('d-none', !hasValue);
-    filterTools(searchInput.value);
+    filterTools(searchInput.value, totalTools);
   });
 
   clearBtn.addEventListener('click', () => {
     searchInput.value = '';
     clearBtn.classList.add('d-none');
-    filterTools('');
+    filterTools('', totalTools);
     searchInput.focus();
   });
 
@@ -139,15 +143,16 @@ function initSearch() {
     if (e.key === 'Escape') {
       searchInput.value = '';
       clearBtn.classList.add('d-none');
-      filterTools('');
+      filterTools('', totalTools);
     }
   });
 }
 
 (async () => {
   await loadTools();
+  const totalTools = tools.length;
   initRecentlyAdded();
   initRecentlyUpdated();
-  initAllTools();
-  initSearch();
+  initAllTools(totalTools);
+  initSearch(totalTools);
 })();
