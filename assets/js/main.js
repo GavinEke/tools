@@ -1,4 +1,5 @@
 let tools = [];
+let currentCategory = 'all';
 
 async function loadTools() {
   try {
@@ -87,7 +88,7 @@ function initAllTools(totalTools) {
   allToolsSection.textContent = `All Tools (${totalTools})`;
 }
 
-function filterTools(query, totalTools) {
+function filterTools(query, category, totalTools) {
   const lowerQuery = query.toLowerCase().trim();
   const allToolCards = document.querySelectorAll('#all-tools > div');
   const allToolsSection = document.querySelector('section:nth-of-type(3) h2');
@@ -101,16 +102,24 @@ function filterTools(query, totalTools) {
   allToolCards.forEach(card => {
     const name = card.dataset.name || '';
     const description = card.dataset.description || '';
-    const category = card.dataset.category || '';
-    const matches = !lowerQuery || name.includes(lowerQuery) || description.toLowerCase().includes(lowerQuery) || category.includes(lowerQuery);
+    const cardCategory = card.dataset.category || '';
+    const queryMatches = !lowerQuery || name.includes(lowerQuery) || description.toLowerCase().includes(lowerQuery) || cardCategory.includes(lowerQuery);
+    const categoryMatches = category === 'all' || cardCategory === category;
+    const matches = queryMatches && categoryMatches;
     card.style.display = matches ? '' : 'none';
     if (matches) visibleCount++;
   });
 
-  if (lowerQuery) {
+  const isFiltered = lowerQuery || category !== 'all';
+
+  if (isFiltered) {
     recentSection.style.display = 'none';
     updatedSection.style.display = 'none';
-    allToolsSection.textContent = `Search Results (${visibleCount})`;
+    if (lowerQuery) {
+      allToolsSection.textContent = `Search Results (${visibleCount})`;
+    } else {
+      allToolsSection.textContent = `All Tools (${visibleCount})`;
+    }
     noResults.classList.toggle('d-none', visibleCount > 0);
     resultsCount.textContent = visibleCount === tools.length ? '' : `Showing ${visibleCount} of ${tools.length} tools`;
   } else {
@@ -122,6 +131,20 @@ function filterTools(query, totalTools) {
   }
 }
 
+function initCategoryFilters(totalTools) {
+  const categoryButtons = document.querySelectorAll('#category-filters button');
+
+  categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      currentCategory = button.dataset.category;
+      categoryButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      const searchInput = document.getElementById('tool-search');
+      filterTools(searchInput.value, currentCategory, totalTools);
+    });
+  });
+}
+
 function initSearch(totalTools) {
   const searchInput = document.getElementById('tool-search');
   const clearBtn = document.getElementById('clear-search');
@@ -129,13 +152,13 @@ function initSearch(totalTools) {
   searchInput.addEventListener('input', () => {
     const hasValue = searchInput.value.length > 0;
     clearBtn.classList.toggle('d-none', !hasValue);
-    filterTools(searchInput.value, totalTools);
+    filterTools(searchInput.value, currentCategory, totalTools);
   });
 
   clearBtn.addEventListener('click', () => {
     searchInput.value = '';
     clearBtn.classList.add('d-none');
-    filterTools('', totalTools);
+    filterTools('', currentCategory, totalTools);
     searchInput.focus();
   });
 
@@ -143,7 +166,7 @@ function initSearch(totalTools) {
     if (e.key === 'Escape') {
       searchInput.value = '';
       clearBtn.classList.add('d-none');
-      filterTools('', totalTools);
+      filterTools('', currentCategory, totalTools);
     }
   });
 }
@@ -155,4 +178,5 @@ function initSearch(totalTools) {
   initRecentlyUpdated();
   initAllTools(totalTools);
   initSearch(totalTools);
+  initCategoryFilters(totalTools);
 })();

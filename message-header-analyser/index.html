@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Colour Picker - tools.gavin.cloud</title>
+    <title>Message Header Analyzer - tools.gavin.cloud</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css" integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/assets/css/styles.css">
   </head>
@@ -39,43 +39,40 @@
       <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
           <div class="mb-4">
-            <h1 class="display-5 fw-bold text-body-emphasis">Colour Picker</h1>
-            <p class="text-body-secondary">Pick colours and convert between different color formats including HEX, RGB, and HSL.</p>
+            <h1 class="display-5 fw-bold text-body-emphasis">Message Header Analyser</h1>
+            <p class="text-body-secondary">Analyse and parse message headers from emails or HTTP requests.</p>
           </div>
 
           <div class="card mb-4">
             <div class="card-body">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <label for="color-picker" class="form-label fw-medium">Color Picker</label>
-                    <input type="color" class="form-control form-control-color" id="color-picker" value="#2563eb">
-                  </div>
-                  <div id="color-swatch" class="mb-3 border rounded" style="height: 100px; background-color: #2563eb;"></div>
+              <div class="mb-3">
+                <label for="input-headers" class="form-label fw-medium">Input Headers</label>
+                <textarea class="form-control font-monospace" id="input-headers" rows="8" placeholder="From: sender@example.com&#10;To: recipient@example.com&#10;Subject: Test Message"></textarea>
+              </div>
+              <div class="d-flex gap-2">
+                <button type="button" class="btn btn-primary" id="analyze-btn">Analyze</button>
+                <button type="button" class="btn btn-outline-secondary" id="clear-btn">Clear</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="output-section" class="d-none">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="card-title mb-0">Parsed Headers</h5>
+                  <button type="button" class="btn btn-sm btn-outline-primary" id="copy-btn">Copy</button>
                 </div>
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <label for="hex-input" class="form-label fw-medium">HEX</label>
-                    <div class="input-group">
-                      <input type="text" class="form-control font-monospace" id="hex-input" value="#2563eb" placeholder="#RRGGBB">
-                      <button class="btn btn-outline-secondary" type="button" id="copy-hex">Copy</button>
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <label for="rgb-input" class="form-label fw-medium">RGB</label>
-                    <div class="input-group">
-                      <input type="text" class="form-control font-monospace" id="rgb-input" value="rgb(37, 99, 235)" placeholder="rgb(R, G, B)">
-                      <button class="btn btn-outline-secondary" type="button" id="copy-rgb">Copy</button>
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <label for="hsl-input" class="form-label fw-medium">HSL</label>
-                    <div class="input-group">
-                      <input type="text" class="form-control font-monospace" id="hsl-input" value="hsl(217, 91%, 60%)" placeholder="hsl(H, S%, L%)">
-                      <button class="btn btn-outline-secondary" type="button" id="copy-hsl">Copy</button>
-                    </div>
-                  </div>
-                </div>
+                <table class="table table-striped" id="headers-table">
+                  <thead>
+                    <tr>
+                      <th>Header</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody id="headers-body">
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -92,6 +89,6 @@
      </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js" integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./colour-picker.js"></script>
+    <script src="./message-header-analyser.js"></script>
   </body>
 </html>
