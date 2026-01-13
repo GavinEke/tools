@@ -1,4 +1,4 @@
-(function() {
+(function () {
   const canvas = document.getElementById('whiteboard');
   const ctx = canvas.getContext('2d');
   const colorPicker = document.getElementById('color-picker');

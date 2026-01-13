@@ -1,4 +1,4 @@
-(function() {
+(function () {
   const inputHeaders = document.getElementById('input-headers');
   const analyzeBtn = document.getElementById('analyze-btn');
   const clearBtn = document.getElementById('clear-btn');

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Case Converter - tools.gavin.cloud</title>
+  <title>Header Analyser - tools.gavin.cloud</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css"
     integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -54,33 +54,19 @@
     <div class="row justify-content-center">
       <div class="col-lg-8 col-md-10">
         <div class="mb-4">
-          <h1 class="display-5 fw-bold text-body-emphasis">Case Converter</h1>
-          <p class="text-body-secondary">Convert text between different case formats: uppercase, lowercase, title case,
-            camel case, and more.</p>
+          <h1 class="display-5 fw-bold text-body-emphasis">Header Analyser</h1>
+          <p class="text-body-secondary">Analyse and parse message headers from emails or HTTP requests.</p>
         </div>
 
         <div class="card mb-4">
           <div class="card-body">
             <div class="mb-3">
-              <label for="input-text" class="form-label fw-medium">Input Text</label>
-              <textarea class="form-control font-monospace" id="input-text" rows="4"
-                placeholder="Enter text to convert"></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="case-select" class="form-label fw-medium">Case Format</label>
-              <select class="form-select" id="case-select">
-                <option value="uppercase">Uppercase</option>
-                <option value="lowercase">Lowercase</option>
-                <option value="title-case">Title Case</option>
-                <option value="camel-case">Camel Case</option>
-                <option value="pascal-case">Pascal Case</option>
-                <option value="snake-case">Snake Case</option>
-                <option value="kebab-case">Kebab Case</option>
-                <option value="constant-case">Constant Case</option>
-              </select>
+              <label for="input-headers" class="form-label fw-medium">Input Headers</label>
+              <textarea class="form-control font-monospace" id="input-headers" rows="8"
+                placeholder="From: sender@example.com&#10;To: recipient@example.com&#10;Subject: Test Message"></textarea>
             </div>
             <div class="d-flex gap-2">
-              <button type="button" class="btn btn-primary" id="convert-btn">Convert</button>
+              <button type="button" class="btn btn-primary" id="analyze-btn">Analyze</button>
               <button type="button" class="btn btn-outline-secondary" id="clear-btn">Clear</button>
             </div>
           </div>
@@ -90,10 +76,19 @@
           <div class="card">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="card-title mb-0">Converted Text</h5>
+                <h5 class="card-title mb-0">Parsed Headers</h5>
                 <button type="button" class="btn btn-sm btn-outline-primary" id="copy-btn">Copy</button>
               </div>
-              <textarea class="form-control font-monospace" id="output-text" rows="4" readonly></textarea>
+              <table class="table table-striped" id="headers-table">
+                <thead>
+                  <tr>
+                    <th>Header</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody id="headers-body">
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -113,7 +108,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js"
     integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="./case-converter.js"></script>
+  <script src="./header-analyser.js"></script>
 </body>
 
 </html>

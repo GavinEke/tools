@@ -26,17 +26,34 @@
 
     if (!data.Answer || data.Answer.length === 0) {
       const row = document.createElement('tr');
-      row.innerHTML = `<td colspan="4" class="text-center py-4 text-muted">No ${recordType} records found for this domain.</td>`;
+      const td = document.createElement('td');
+      td.colSpan = 4;
+      td.className = 'text-center py-4 text-muted';
+      td.textContent = `No ${recordType} records found for this domain.`;
+      row.appendChild(td);
       tableBody.appendChild(row);
     } else {
       data.Answer.forEach(record => {
         const row = document.createElement('tr');
-        row.innerHTML = `
-          <td class="ps-4 fw-medium">${recordType}</td>
-          <td>${record.name}</td>
-          <td>${record.TTL}</td>
-          <td class="text-break">${record.data}</td>
-        `;
+
+        const td1 = document.createElement('td');
+        td1.className = 'ps-4 fw-medium';
+        td1.textContent = recordType;
+        row.appendChild(td1);
+
+        const td2 = document.createElement('td');
+        td2.textContent = record.name;
+        row.appendChild(td2);
+
+        const td3 = document.createElement('td');
+        td3.textContent = record.TTL;
+        row.appendChild(td3);
+
+        const td4 = document.createElement('td');
+        td4.className = 'text-break';
+        td4.textContent = record.data;
+        row.appendChild(td4);
+
         tableBody.appendChild(row);
       });
     }

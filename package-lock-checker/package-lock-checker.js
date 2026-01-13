@@ -1,6 +1,10 @@
 (() => {
   const OSV_API_BASE = 'https://api.osv.dev/v1';
 
+  function escapeHtml(text) {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+  }
+
   let parsedLockfile = null;
 
   function showLoading() {
@@ -213,16 +217,13 @@
         const severity = details.database_specific?.severity || severityObj.score || severityObj.type || vuln.severity || 'UNKNOWN';
         const severityUpper = severity.toUpperCase();
         const severityBadge = severityUpper === 'CRITICAL' ? 'severity-critical' :
-                             severityUpper === 'HIGH' ? 'severity-high' :
-                             severityUpper === 'MODERATE' ? 'severity-medium' : 'severity-low';
+          severityUpper === 'HIGH' ? 'severity-high' :
+            severityUpper === 'MODERATE' ? 'severity-medium' : 'severity-low';
         const published = details.published || vuln.published ? new Date(details.published || vuln.published).toLocaleDateString() : 'Unknown';
         const modified = details.modified ? new Date(details.modified).toLocaleDateString() : 'Unknown';
         const summary = details.summary || vuln.summary || 'No summary available';
         const description = details.description || '';
         const affected = details.affected || [];
-
-        const item = document.createElement('div');
-        item.className = 'list-group-item';
 
         const githubAdvisoryUrlPattern = /^https:\/\/github\.com\/[^/]+\/[^/]+\/security\/advisories\//;
         const references = (details.references || vuln.references || []).filter(ref =>
@@ -231,53 +232,56 @@
 
         const affectedRanges = affected.length > 0
           ? affected.map(a => {
-              const packageName = a.package?.name || name;
-              const ranges = a.ranges || [];
-              return ranges.map(r => {
-                if (r.type === 'ECOSYSTEM' && r.events) {
-                  const events = r.events.map(e => {
-                    if (e.introduced) return `introduced: ${e.introduced}`;
-                    if (e.fixed) return `fixed: ${e.fixed}`;
-                    if (e.limit) return `limit: ${e.limit}`;
-                    return '';
-                  }).filter(Boolean).join(', ');
-                  return events ? `\`${packageName}\`: ${events}` : `\`${packageName}\``;
-                }
-                return '';
-              }).filter(Boolean).join('<br>');
-            }).filter(Boolean).join('<br>')
+            const packageName = a.package?.name || name;
+            const ranges = a.ranges || [];
+            return ranges.map(r => {
+              if (r.type === 'ECOSYSTEM' && r.events) {
+                const events = r.events.map(e => {
+                  if (e.introduced) return `introduced: ${e.introduced}`;
+                  if (e.fixed) return `fixed: ${e.fixed}`;
+                  if (e.limit) return `limit: ${e.limit}`;
+                  return '';
+                }).filter(Boolean).join(', ');
+                return events ? `\`${packageName}\`: ${events}` : `\`${packageName}\``;
+              }
+              return '';
+            }).filter(Boolean).join('<br>');
+          }).filter(Boolean).join('<br>')
           : '';
 
         const cwe = details.database_specific?.cwe || '';
         const cvss = details.database_specific?.cvss?.vector_string || '';
         const githubReviewStatus = details.database_specific?.github_review_status || '';
 
+        const item = document.createElement('div');
+        item.className = 'list-group-item';
+
         item.innerHTML = `
           <div class="d-flex justify-content-between align-items-start">
             <div class="flex-grow-1">
               <h5 class="mb-1">
-                <span class="badge bg-${severityBadge}">${severity}</span>
-                ${name}@${version}
+                <span class="badge bg-${severityBadge}">${escapeHtml(severity)}</span>
+                ${escapeHtml(name)}@${escapeHtml(version)}
               </h5>
-              <p class="mb-2 text-body-secondary">${summary}</p>
-              ${description ? `<div class="mb-2 small text-body-secondary" style="max-height: 150px; overflow-y: auto;">${description}</div>` : ''}
+              <p class="mb-2 text-body-secondary">${escapeHtml(summary)}</p>
+              ${description ? `<div class="mb-2 small text-body-secondary" style="max-height: 150px; overflow-y: auto;">${escapeHtml(description)}</div>` : ''}
               <div class="mb-2">
-                <small class="text-muted d-block">ID: ${vuln.id}</small>
-                <small class="text-muted d-block">Published: ${published} | Modified: ${modified}</small>
-                ${cwe ? `<small class="text-muted d-block">CWE: ${cwe}</small>` : ''}
-                ${cvss ? `<small class="text-muted d-block">CVSS: ${cvss}</small>` : ''}
-                ${githubReviewStatus ? `<small class="text-muted d-block">Review Status: ${githubReviewStatus}</small>` : ''}
+                <small class="text-muted d-block">ID: ${escapeHtml(vuln.id)}</small>
+                <small class="text-muted d-block">Published: ${escapeHtml(published)} | Modified: ${escapeHtml(modified)}</small>
+                ${cwe ? `<small class="text-muted d-block">CWE: ${escapeHtml(cwe)}</small>` : ''}
+                ${cvss ? `<small class="text-muted d-block">CVSS: ${escapeHtml(cvss)}</small>` : ''}
+                ${githubReviewStatus ? `<small class="text-muted d-block">Review Status: ${escapeHtml(githubReviewStatus)}</small>` : ''}
               </div>
               ${affectedRanges ? `<div class="mb-2"><small class="text-muted text-uppercase small fw-bold">Affected Versions:</small><br><small class="text-muted">${affectedRanges}</small></div>` : ''}
               ${references.length > 0 ? `
                 <div class="mt-2">
-                  ${references.slice(0, 3).map(ref => 
-                    `<a href="${ref.url}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary me-1 mb-1">${ref.type || 'Reference'}</a>`
-                  ).join('')}
+                  ${references.slice(0, 3).map(ref =>
+          `<a href="${ref.url}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary me-1 mb-1">${escapeHtml(ref.type || 'Reference')}</a>`
+        ).join('')}
                 </div>
               ` : ''}
             </div>
-            ${details.fixed_version ? `<span class="badge bg-success ms-2">Fixed: ${details.fixed_version}</span>` : ''}
+            ${details.fixed_version ? `<span class="badge bg-success ms-2">Fixed: ${escapeHtml(details.fixed_version)}</span>` : ''}
           </div>
         `;
         vulnList.appendChild(item);

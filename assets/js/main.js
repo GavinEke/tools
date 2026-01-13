@@ -3,7 +3,7 @@ let currentCategory = 'all';
 
 async function loadTools() {
   try {
-    const response = await fetch('data/tools.json');
+    const response = await fetch('_data/tools.json');
     tools = await response.json();
   } catch (error) {
     console.error('Failed to load tools:', error);
@@ -15,61 +15,157 @@ function formatDate(dateStr) {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+function sanitizeSvg(svgString) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(svgString, 'image/svg+xml');
+  // Remove dangerous elements
+  const dangerousElements = doc.querySelectorAll('script, iframe, object, embed, form, input, button, a[href^="javascript:"]');
+  dangerousElements.forEach(el => el.remove());
+  // Remove event handler attributes
+  const allElements = doc.querySelectorAll('*');
+  allElements.forEach(el => {
+    Array.from(el.attributes).forEach(attr => {
+      if (attr.name.startsWith('on')) {
+        el.removeAttribute(attr.name);
+      }
+    });
+  });
+  return doc.documentElement ? doc.documentElement.outerHTML : '';
+}
+
 function createToolCard(tool) {
-  return `
-    <div class="col-md-6 col-lg-4" data-name="${tool.name.toLowerCase()}" data-description="${tool.description.toLowerCase()}" data-category="${tool.category.toLowerCase()}">
-      <a href="${tool.href}" class="card tool-card h-100 text-decoration-none">
-        <div class="card-body">
-          <div class="d-flex align-items-center mb-3">
-            <div class="tool-icon me-3">${tool.icon}</div>
-            <h3 class="h5 card-title fw-semibold mb-0">${tool.name}</h3>
-          </div>
-          <p class="card-text text-body-secondary">${tool.description}</p>
-        </div>
-      </a>
-    </div>
-  `;
+  const col = document.createElement('div');
+  col.className = 'col-md-6 col-lg-4';
+  col.setAttribute('data-name', tool.name.toLowerCase());
+  col.setAttribute('data-description', tool.description.toLowerCase());
+  col.setAttribute('data-category', tool.category.toLowerCase());
+
+  const a = document.createElement('a');
+  a.href = tool.href;
+  a.className = 'card tool-card h-100 text-decoration-none';
+
+  const cardBody = document.createElement('div');
+  cardBody.className = 'card-body';
+
+  const dFlex = document.createElement('div');
+  dFlex.className = 'd-flex align-items-center mb-3';
+
+  const toolIcon = document.createElement('div');
+  toolIcon.className = 'tool-icon me-3';
+  toolIcon.innerHTML = sanitizeSvg(tool.icon);
+
+  const h3 = document.createElement('h3');
+  h3.className = 'h5 card-title fw-semibold mb-0';
+  h3.textContent = tool.name;
+
+  dFlex.appendChild(toolIcon);
+  dFlex.appendChild(h3);
+
+  const p = document.createElement('p');
+  p.className = 'card-text text-body-secondary';
+  p.textContent = tool.description;
+
+  cardBody.appendChild(dFlex);
+  cardBody.appendChild(p);
+
+  a.appendChild(cardBody);
+  col.appendChild(a);
+
+  return col;
 }
 
 function createRecentToolCard(tool) {
-  return `
-    <div class="col-md-6 col-lg-4 col-xl">
-      <a href="${tool.href}" class="card tool-card h-100 text-decoration-none">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <div class="tool-icon">${tool.icon}</div>
-            <span class="badge bg-light text-body-secondary small">${formatDate(tool.dateAdded)}</span>
-          </div>
-          <h3 class="h6 card-title fw-semibold mb-1">${tool.name}</h3>
-          <p class="card-text text-body-secondary small mb-0">${tool.description}</p>
-        </div>
-      </a>
-    </div>
-  `;
+  const col = document.createElement('div');
+  col.className = 'col-md-6 col-lg-4 col-xl';
+
+  const a = document.createElement('a');
+  a.href = tool.href;
+  a.className = 'card tool-card h-100 text-decoration-none';
+
+  const cardBody = document.createElement('div');
+  cardBody.className = 'card-body';
+
+  const dFlex = document.createElement('div');
+  dFlex.className = 'd-flex justify-content-between align-items-start mb-2';
+
+  const toolIcon = document.createElement('div');
+  toolIcon.className = 'tool-icon';
+  toolIcon.innerHTML = sanitizeSvg(tool.icon);
+
+  const span = document.createElement('span');
+  span.className = 'badge bg-light text-body-secondary small';
+  span.textContent = formatDate(tool.dateAdded);
+
+  dFlex.appendChild(toolIcon);
+  dFlex.appendChild(span);
+
+  const h3 = document.createElement('h3');
+  h3.className = 'h6 card-title fw-semibold mb-1';
+  h3.textContent = tool.name;
+
+  const p = document.createElement('p');
+  p.className = 'card-text text-body-secondary small mb-0';
+  p.textContent = tool.description;
+
+  cardBody.appendChild(dFlex);
+  cardBody.appendChild(h3);
+  cardBody.appendChild(p);
+
+  a.appendChild(cardBody);
+  col.appendChild(a);
+
+  return col;
 }
 
 function createUpdatedToolCard(tool) {
-  return `
-    <div class="col-md-6 col-lg-4 col-xl">
-      <a href="${tool.href}" class="card tool-card h-100 text-decoration-none">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <div class="tool-icon">${tool.icon}</div>
-            <span class="badge bg-light text-body-secondary small">${formatDate(tool.dateUpdated)}</span>
-          </div>
-          <h3 class="h6 card-title fw-semibold mb-1">${tool.name}</h3>
-          <p class="card-text text-body-secondary small mb-0">${tool.description}</p>
-        </div>
-      </a>
-    </div>
-  `;
+  const col = document.createElement('div');
+  col.className = 'col-md-6 col-lg-4 col-xl';
+
+  const a = document.createElement('a');
+  a.href = tool.href;
+  a.className = 'card tool-card h-100 text-decoration-none';
+
+  const cardBody = document.createElement('div');
+  cardBody.className = 'card-body';
+
+  const dFlex = document.createElement('div');
+  dFlex.className = 'd-flex justify-content-between align-items-start mb-2';
+
+  const toolIcon = document.createElement('div');
+  toolIcon.className = 'tool-icon';
+  toolIcon.innerHTML = sanitizeSvg(tool.icon);
+
+  const span = document.createElement('span');
+  span.className = 'badge bg-light text-body-secondary small';
+  span.textContent = formatDate(tool.dateUpdated);
+
+  dFlex.appendChild(toolIcon);
+  dFlex.appendChild(span);
+
+  const h3 = document.createElement('h3');
+  h3.className = 'h6 card-title fw-semibold mb-1';
+  h3.textContent = tool.name;
+
+  const p = document.createElement('p');
+  p.className = 'card-text text-body-secondary small mb-0';
+  p.textContent = tool.description;
+
+  cardBody.appendChild(dFlex);
+  cardBody.appendChild(h3);
+  cardBody.appendChild(p);
+
+  a.appendChild(cardBody);
+  col.appendChild(a);
+
+  return col;
 }
 
 function initRecentlyAdded() {
   const recentContainer = document.getElementById('recent-tools');
   const sortedTools = [...tools].sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
   const recentTools = sortedTools.slice(0, 5);
-  recentContainer.innerHTML = recentTools.map(createRecentToolCard).join('');
+  recentContainer.innerHTML = '';
+  recentTools.forEach(tool => recentContainer.appendChild(createRecentToolCard(tool)));
 }
 
 function initRecentlyUpdated() {
@@ -78,12 +174,14 @@ function initRecentlyUpdated() {
     .filter(t => t.dateUpdated)
     .sort((a, b) => new Date(b.dateUpdated) - new Date(a.dateUpdated))
     .slice(0, 5);
-  updatedContainer.innerHTML = updatedTools.map(createUpdatedToolCard).join('');
+  updatedContainer.innerHTML = '';
+  updatedTools.forEach(tool => updatedContainer.appendChild(createUpdatedToolCard(tool)));
 }
 
 function initAllTools(totalTools) {
   const allToolsContainer = document.getElementById('all-tools');
-  allToolsContainer.innerHTML = tools.map(createToolCard).join('');
+  allToolsContainer.innerHTML = '';
+  tools.forEach(tool => allToolsContainer.appendChild(createToolCard(tool)));
   const allToolsSection = document.querySelector('section:nth-of-type(3) h2');
   allToolsSection.textContent = `All Tools (${totalTools})`;
 }

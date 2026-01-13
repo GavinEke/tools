@@ -126,6 +126,15 @@ code {
   .lead {
     font-size: 1rem;
   }
+
+  #category-filters {
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  #category-filters .btn {
+    border-radius: 0.375rem !important;
+  }
 }
 
 .severity-critical,

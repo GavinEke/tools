@@ -54,8 +54,8 @@
 
     diff.forEach((item, index) => {
       if ((item.type === 'added' && !showAdded) ||
-          (item.type === 'removed' && !showRemoved) ||
-          (item.type === 'unchanged' && !showUnchanged)) {
+        (item.type === 'removed' && !showRemoved) ||
+        (item.type === 'unchanged' && !showUnchanged)) {
         return;
       }
 

@@ -1,166 +1,186 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Subnet Calculator - tools.gavin.cloud</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css" integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/assets/css/styles.css">
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-      <div class="container">
-        <a class="navbar-brand fw-bold" href="/">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bi bi-tools me-2"><circle cx="12" cy="12" r="10"/><path d="M12 2a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 0 0-9z"/><path d="M8 8l8-4 1 2-3 6-2-1Z"/><path d="M4 11l2 1"/><path d="M14 8l-2 4"/></svg>
-          tools.gavin.cloud
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
-            <li class="nav-item">
-              <a class="nav-link" href="/">All Tools</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/GavinEke/tools" target="_blank" rel="noopener">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="me-1">
-                  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-                </svg>
-                GitHub
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
 
-    <main class="container py-5">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div class="mb-4">
-            <h1 class="display-5 fw-bold text-body-emphasis">Subnet Calculator</h1>
-            <p class="text-body-secondary">Calculate network addresses, broadcast addresses, subnet masks, and usable host ranges.</p>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Subnet Calculator - tools.gavin.cloud</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css"
+    integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="bi bi-tools me-2">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 2a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 0 0-9z" />
+          <path d="M8 8l8-4 1 2-3 6-2-1Z" />
+          <path d="M4 11l2 1" />
+          <path d="M14 8l-2 4" />
+        </svg>
+        tools.gavin.cloud
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/">All Tools</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/GavinEke/tools" target="_blank" rel="noopener">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"
+                class="me-1">
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+              </svg>
+              GitHub
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="mb-4">
+          <h1 class="display-5 fw-bold text-body-emphasis">Subnet Calculator</h1>
+          <p class="text-body-secondary">Calculate network addresses, broadcast addresses, subnet masks, and usable host
+            ranges.</p>
+        </div>
+
+        <form id="subnet-form" class="card mb-4">
+          <div class="card-body">
+            <div class="row g-3 align-items-end">
+              <div class="col-md-8">
+                <label for="ip-address" class="form-label fw-medium">IP Address</label>
+                <input type="text" class="form-control" id="ip-address" placeholder="192.168.1.1" required>
+              </div>
+              <div class="col-md-4">
+                <label for="cidr" class="form-label fw-medium">CIDR</label>
+                <select class="form-select" id="cidr">
+                  <option value="8">/8 (255.0.0.0)</option>
+                  <option value="9">/9 (255.128.0.0)</option>
+                  <option value="10">/10 (255.192.0.0)</option>
+                  <option value="11">/11 (255.224.0.0)</option>
+                  <option value="12">/12 (255.240.0.0)</option>
+                  <option value="13">/13 (255.248.0.0)</option>
+                  <option value="14">/14 (255.252.0.0)</option>
+                  <option value="15">/15 (255.254.0.0)</option>
+                  <option value="16" selected>/16 (255.255.0.0)</option>
+                  <option value="17">/17 (255.255.128.0)</option>
+                  <option value="18">/18 (255.255.192.0)</option>
+                  <option value="19">/19 (255.255.224.0)</option>
+                  <option value="20">/20 (255.255.240.0)</option>
+                  <option value="21">/21 (255.255.248.0)</option>
+                  <option value="22">/22 (255.255.252.0)</option>
+                  <option value="23">/23 (255.255.254.0)</option>
+                  <option value="24">/24 (255.255.255.0)</option>
+                  <option value="25">/25 (255.255.255.128)</option>
+                  <option value="26">/26 (255.255.255.192)</option>
+                  <option value="27">/27 (255.255.255.224)</option>
+                  <option value="28">/28 (255.255.255.240)</option>
+                  <option value="29">/29 (255.255.255.248)</option>
+                  <option value="30">/30 (255.255.255.252)</option>
+                  <option value="31">/31 (255.255.255.254)</option>
+                  <option value="32">/32 (255.255.255.255)</option>
+                </select>
+              </div>
+            </div>
+            <div class="mt-3 d-flex gap-2">
+              <button type="submit" class="btn btn-primary">Calculate</button>
+              <button type="button" class="btn btn-outline-secondary" id="clear-btn">Clear</button>
+            </div>
+          </div>
+        </form>
+
+        <div id="results" class="d-none">
+          <div class="card">
+            <div class="card-header bg-transparent py-3">
+              <h2 class="h5 mb-0 fw-semibold">Subnet Information</h2>
+            </div>
+            <div class="card-body p-0">
+              <table class="table table-hover mb-0">
+                <tbody>
+                  <tr>
+                    <th scope="row" class="w-25 ps-4">Network Address</th>
+                    <td class="fw-medium" id="result-network"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="ps-4">Broadcast Address</th>
+                    <td class="fw-medium" id="result-broadcast"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="ps-4">Subnet Mask</th>
+                    <td class="fw-medium" id="result-mask"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="ps-4">Wildcard Mask</th>
+                    <td class="fw-medium" id="result-wildcard"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="ps-4">Usable Host Range</th>
+                    <td class="fw-medium" id="result-range"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="ps-4">Number of Hosts</th>
+                    <td class="fw-medium" id="result-hosts"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="ps-4">Usable Hosts</th>
+                    <td class="fw-medium" id="result-usable"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="ps-4">IP Class</th>
+                    <td class="fw-medium" id="result-class"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="ps-4">Address Type</th>
+                    <td class="fw-medium" id="result-type"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <form id="subnet-form" class="card mb-4">
+          <div class="card mt-4">
+            <div class="card-header bg-transparent py-3">
+              <h2 class="h5 mb-0 fw-semibold">Binary Representation</h2>
+            </div>
             <div class="card-body">
-              <div class="row g-3 align-items-end">
-                <div class="col-md-8">
-                  <label for="ip-address" class="form-label fw-medium">IP Address</label>
-                  <input type="text" class="form-control" id="ip-address" placeholder="192.168.1.1" required>
-                </div>
-                <div class="col-md-4">
-                  <label for="cidr" class="form-label fw-medium">CIDR</label>
-                  <select class="form-select" id="cidr">
-                    <option value="8">/8 (255.0.0.0)</option>
-                    <option value="9">/9 (255.128.0.0)</option>
-                    <option value="10">/10 (255.192.0.0)</option>
-                    <option value="11">/11 (255.224.0.0)</option>
-                    <option value="12">/12 (255.240.0.0)</option>
-                    <option value="13">/13 (255.248.0.0)</option>
-                    <option value="14">/14 (255.252.0.0)</option>
-                    <option value="15">/15 (255.254.0.0)</option>
-                    <option value="16" selected>/16 (255.255.0.0)</option>
-                    <option value="17">/17 (255.255.128.0)</option>
-                    <option value="18">/18 (255.255.192.0)</option>
-                    <option value="19">/19 (255.255.224.0)</option>
-                    <option value="20">/20 (255.255.240.0)</option>
-                    <option value="21">/21 (255.255.248.0)</option>
-                    <option value="22">/22 (255.255.252.0)</option>
-                    <option value="23">/23 (255.255.254.0)</option>
-                    <option value="24">/24 (255.255.255.0)</option>
-                    <option value="25">/25 (255.255.255.128)</option>
-                    <option value="26">/26 (255.255.255.192)</option>
-                    <option value="27">/27 (255.255.255.224)</option>
-                    <option value="28">/28 (255.255.255.240)</option>
-                    <option value="29">/29 (255.255.255.248)</option>
-                    <option value="30">/30 (255.255.255.252)</option>
-                    <option value="31">/31 (255.255.255.254)</option>
-                    <option value="32">/32 (255.255.255.255)</option>
-                  </select>
-                </div>
-              </div>
-              <div class="mt-3 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Calculate</button>
-                <button type="button" class="btn btn-outline-secondary" id="clear-btn">Clear</button>
-              </div>
-            </div>
-          </form>
-
-          <div id="results" class="d-none">
-            <div class="card">
-              <div class="card-header bg-transparent py-3">
-                <h2 class="h5 mb-0 fw-semibold">Subnet Information</h2>
-              </div>
-              <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                  <tbody>
-                    <tr>
-                      <th scope="row" class="w-25 ps-4">Network Address</th>
-                      <td class="fw-medium" id="result-network"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="ps-4">Broadcast Address</th>
-                      <td class="fw-medium" id="result-broadcast"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="ps-4">Subnet Mask</th>
-                      <td class="fw-medium" id="result-mask"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="ps-4">Wildcard Mask</th>
-                      <td class="fw-medium" id="result-wildcard"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="ps-4">Usable Host Range</th>
-                      <td class="fw-medium" id="result-range"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="ps-4">Number of Hosts</th>
-                      <td class="fw-medium" id="result-hosts"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="ps-4">Usable Hosts</th>
-                      <td class="fw-medium" id="result-usable"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="ps-4">IP Class</th>
-                      <td class="fw-medium" id="result-class"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="ps-4">Address Type</th>
-                      <td class="fw-medium" id="result-type"></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="card mt-4">
-              <div class="card-header bg-transparent py-3">
-                <h2 class="h5 mb-0 fw-semibold">Binary Representation</h2>
-              </div>
-              <div class="card-body">
-                <code id="result-binary-ip" class="d-block mb-2"></code>
-                <code id="result-binary-mask" class="d-block mb-2"></code>
-                <code id="result-binary-network"></code>
-              </div>
+              <code id="result-binary-ip" class="d-block mb-2"></code>
+              <code id="result-binary-mask" class="d-block mb-2"></code>
+              <code id="result-binary-network"></code>
             </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
+  </main>
 
-     <footer class="py-4 mt-auto">
-       <div class="container">
-         <div class="text-center">
-           <span class="text-body-secondary small">Made with AI & ❤️ by <a href="https://gavineke.com" target="_blank" rel="noopener">Gavin Eke</a></span>
-         </div>
-       </div>
-     </footer>
+  <footer class="py-4 mt-auto">
+    <div class="container">
+      <div class="text-center">
+        <span class="text-body-secondary small">Made with AI & ❤️ by <a href="https://gavineke.com" target="_blank"
+            rel="noopener">Gavin Eke</a></span>
+      </div>
+    </div>
+  </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js" integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./subnet-calculator.js"></script>
-  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js"
+    integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="./subnet-calculator.js"></script>
+</body>
+
 </html>

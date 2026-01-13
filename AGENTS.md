@@ -36,14 +36,14 @@ No React, Vue, Svelte, jQuery, or other frameworks are allowed.
 Each tool must live in its **own folder** at the repository root.
 
 / (repo root)
+├── _data/
+│   └── tools.json        # Tools registry (auto-loaded by index page)
 ├── AGENTS.md             # Global instructions for the entire repository
 ├── assets/
 │   ├── css/
 │   │   └── styles.css    # Shared global CSS (used by ALL tools)
 │   └── js/
 │       └── main.js       # Shared global JS (optional usage)
-├── data/
-│   └── tools.json        # Tools registry (auto-loaded by index page)
 ├── <tool-name>/
 │   └── index.html        # Tool UI
 │   └── <tool-name>.js    # Tool logic
@@ -108,7 +108,7 @@ Use generic, purpose-based names:
 ## JavaScript Rules
 
 - Each tool’s JS must live in:
-  `tool-name>/<tool-name>.js`
+  `<tool-name>/<tool-name>.js`
 - No inline JavaScript in HTML
 - No global variable pollution
 - Wrap logic in an IIFE or module-style pattern
@@ -140,7 +140,7 @@ The root `index.html` acts as a directory of utilities.
 
 ## Tools Registry (data/tools.json)
 
-All tools are registered in `data/tools.json`. This file is fetched by the index page to dynamically generate tool cards.
+All tools are registered in `_data/tools.json`. This file is fetched by the index page to dynamically generate tool cards.
 
 ### Schema
 

@@ -79,7 +79,7 @@
 
   async function handleLookup() {
     const ipInput = document.getElementById('ip-input').value.trim();
-    
+
     if (ipInput && !isValidIp(ipInput)) {
       showError('Please enter a valid IP address');
       return;

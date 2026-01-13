@@ -10,7 +10,11 @@
         try {
           preview.innerHTML = marked.parse(savedMarkdown);
         } catch (e) {
-          preview.innerHTML = '<p class="text-danger">Error parsing markdown: ' + e.message + '</p>';
+          const p = document.createElement('p');
+          p.className = 'text-danger';
+          p.textContent = 'Error parsing markdown: ' + e.message;
+          preview.innerHTML = '';
+          preview.appendChild(p);
         }
       }
     }

@@ -196,7 +196,7 @@
     convertBtn.disabled = true;
 
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       document.getElementById('csv-input').value = e.target.result;
       document.getElementById('file-info').textContent = `${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
       document.getElementById('file-info').classList.remove('d-none');
@@ -206,7 +206,7 @@
       convertBtn.disabled = false;
     };
 
-    reader.onerror = function() {
+    reader.onerror = function () {
       showError('Error reading file');
       convertBtn.textContent = originalText;
       convertBtn.disabled = false;

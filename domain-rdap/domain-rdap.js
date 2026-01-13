@@ -57,22 +57,61 @@
         const nameservers = data.nameservers ? data.nameservers.map(ns => ns.ldhName || ns.unicodeName).join(', ') : 'N/A';
         const status = data.status ? data.status.map(s => s.status || s).join(', ') : 'N/A';
 
-        const html = `
-            <div class="card">
-                <div class="card-header">WHOIS Results for ${domainName}</div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Domain:</strong> ${domainName}</li>
-                        <li class="list-group-item"><strong>Registrar:</strong> ${registrar}</li>
-                        <li class="list-group-item"><strong>Created:</strong> ${created}</li>
-                        <li class="list-group-item"><strong>Expires:</strong> ${expires}</li>
-                        <li class="list-group-item"><strong>Nameservers:</strong> ${nameservers}</li>
-                        <li class="list-group-item"><strong>Status:</strong> ${status}</li>
-                    </ul>
-                </div>
-            </div>
-        `;
-        resultsDiv.innerHTML = html;
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const cardHeader = document.createElement('div');
+        cardHeader.className = 'card-header';
+        cardHeader.textContent = `WHOIS Results for ${domainName}`;
+        card.appendChild(cardHeader);
+
+        const cardBody = document.createElement('div');
+        cardBody.className = 'card-body';
+
+        const ul = document.createElement('ul');
+        ul.className = 'list-group list-group-flush';
+
+        const li1 = document.createElement('li');
+        li1.className = 'list-group-item';
+        li1.innerHTML = '<strong>Domain:</strong> ';
+        li1.appendChild(document.createTextNode(domainName));
+        ul.appendChild(li1);
+
+        const li2 = document.createElement('li');
+        li2.className = 'list-group-item';
+        li2.innerHTML = '<strong>Registrar:</strong> ';
+        li2.appendChild(document.createTextNode(registrar));
+        ul.appendChild(li2);
+
+        const li3 = document.createElement('li');
+        li3.className = 'list-group-item';
+        li3.innerHTML = '<strong>Created:</strong> ';
+        li3.appendChild(document.createTextNode(created));
+        ul.appendChild(li3);
+
+        const li4 = document.createElement('li');
+        li4.className = 'list-group-item';
+        li4.innerHTML = '<strong>Expires:</strong> ';
+        li4.appendChild(document.createTextNode(expires));
+        ul.appendChild(li4);
+
+        const li5 = document.createElement('li');
+        li5.className = 'list-group-item';
+        li5.innerHTML = '<strong>Nameservers:</strong> ';
+        li5.appendChild(document.createTextNode(nameservers));
+        ul.appendChild(li5);
+
+        const li6 = document.createElement('li');
+        li6.className = 'list-group-item';
+        li6.innerHTML = '<strong>Status:</strong> ';
+        li6.appendChild(document.createTextNode(status));
+        ul.appendChild(li6);
+
+        cardBody.appendChild(ul);
+        card.appendChild(cardBody);
+
+        resultsDiv.innerHTML = '';
+        resultsDiv.appendChild(card);
     }
 
     function findRegistrar(entities) {
@@ -103,6 +142,10 @@
     }
 
     function displayError(message) {
-        resultsDiv.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger';
+        alertDiv.textContent = message;
+        resultsDiv.innerHTML = '';
+        resultsDiv.appendChild(alertDiv);
     }
 })();
