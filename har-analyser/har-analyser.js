@@ -120,7 +120,7 @@
   }
 
   // Show request details
-  window.showRequestDetails = function(index) {
+  window.showRequestDetails = function (index) {
     const entry = harData.log.entries[index];
 
     const detailsHtml = `
