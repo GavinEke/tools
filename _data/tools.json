@@ -123,7 +123,7 @@
     "dateUpdated": "",
     "category": "System",
     "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1-.22-1.763 5.235 5.235 0 0 1 .153-1.22 2.5 2.5 0 0 0-.848.53 2.44 2.44 0 0 0-.953 1.788c0 .389.075.765.22 1.128-.026.002-.053.003-.08.003H4.09zm2.41 0H8.91a9.27 9.27 0 0 1-.22-1.763 5.235 5.235 0 0 1 .153-1.22 2.5 2.5 0 0 0-.848.53 2.44 2.44 0 0 0-.953 1.788c0 .389.075.765.22 1.128-.026.002-.053.003-.08.003H6.5zm2.41 0h2.41a.5.5 0 0 0-.08-.003c.145-.363.22-.74.22-1.128a2.44 2.44 0 0 0-.953-1.788 2.5 2.5 0 0 0-.848-.53 5.235 5.235 0 0 1 .153 1.22 9.267 9.267 0 0 1-.22 1.763zM7.5 11.046c.67-.204 1.335-.82 1.887-1.855A7.97 7.97 0 0 0 10.855 8H8.5v2.923z\"/></svg>",
-    "description": "Analyze and test user agent strings for browsers and devices."
+    "description": "Analyse and test user agent strings for browsers and devices."
   },
   {
     "name": "Text Diff Tool",
@@ -189,13 +189,13 @@
     "description": "A simple digital whiteboard for sketching diagrams and notes."
   },
   {
-    "name": "Header Analyser",
-    "href": "header-analyser/",
+    "name": "Email Header Analyser",
+    "href": "email-header-analyser/",
     "dateAdded": "2026-01-13",
-    "dateUpdated": "",
+    "dateUpdated": "2026-01-16",
     "category": "Security",
     "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z\"/></svg>",
-    "description": "Analyse and parse message headers from emails or HTTP requests."
+    "description": "Analyse and parse email message headers to extract key information and authentication details."
   },
   {
     "name": "Yarn Lock Checker",
@@ -241,5 +241,14 @@
     "category": "System",
     "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z\"/><path d=\"M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.146 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.146 1.146-1.147a.5.5 0 0 1 .708 0z\"/><path d=\"M7 13.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.146 1.146-1.147a.5.5 0 0 1 .708 0z\"/></svg>",
     "description": "Create and manage your tasks with persistent storage across browser sessions."
+  },
+  {
+    "name": "DMARC Report Analyser",
+    "href": "dmarc-analyser/",
+    "dateAdded": "2026-01-16",
+    "dateUpdated": "",
+    "category": "Security",
+    "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z\"/></svg>",
+    "description": "Analyse DMARC aggregate report XML files to view email authentication data and compliance."
   }
 ]

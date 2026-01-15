@@ -13,6 +13,7 @@
     document.getElementById('summary').classList.add('d-none');
     document.getElementById('vulnerabilities').classList.add('d-none');
     document.getElementById('no-vulnerabilities').classList.add('d-none');
+    document.getElementById('loading').scrollIntoView({ behavior: 'smooth' });
   }
 
   function hideLoading() {
@@ -262,6 +263,25 @@
         const description = details.description || '';
         const affected = details.affected || [];
 
+        const cwe = details.cwe || vuln.cwe;
+        const cvss = details.cvss || vuln.cvss;
+        const githubReviewStatus = details.database_specific?.github_review_status || vuln.database_specific?.github_review_status;
+        const references = details.references || vuln.references || [];
+        const affectedRanges = affected.length > 0 ? affected.map(a => {
+          const ranges = a.ranges || [];
+          return ranges.map(r => {
+            const events = r.events || [];
+            const introduced = events.find(e => e.introduced)?.introduced;
+            const fixed = events.find(e => e.fixed)?.fixed;
+            let rangeStr = '';
+            if (introduced) rangeStr += `>=${introduced}`;
+            if (fixed) rangeStr += ` <${fixed}`;
+            return rangeStr.trim();
+          }).join(', ');
+        }).join('<br>') : '';
+        const githubAdvisoryUrlPattern = /^https:\/\/github\.com\/[^/]+\/[^/]+\/security\/advisories\//;
+        const filteredReferences = references.filter(ref => (ref.type === 'ADVISORY' || ref.type === 'WEB') && githubAdvisoryUrlPattern.test(ref.url));
+
         const item = document.createElement('div');
         item.className = 'list-group-item';
 
@@ -364,11 +384,11 @@
         }
 
         // References
-        if (references.length > 0) {
+        if (filteredReferences.length > 0) {
           const refDiv = document.createElement('div');
           refDiv.className = 'mt-2';
 
-          references.slice(0, 3).forEach(ref => {
+          filteredReferences.slice(0, 3).forEach(ref => {
             const link = document.createElement('a');
             link.href = ref.url;
             link.target = '_blank';
