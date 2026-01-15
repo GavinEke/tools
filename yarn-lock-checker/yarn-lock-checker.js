@@ -265,62 +265,133 @@
         const item = document.createElement('div');
         item.className = 'list-group-item';
 
-        const githubAdvisoryUrlPattern = /^https:\/\/github\.com\/[^/]+\/[^/]+\/security\/advisories\//;
-        const references = (details.references || vuln.references || []).filter(ref =>
-          ref.type === 'ADVISORY' || (ref.type === 'WEB' && githubAdvisoryUrlPattern.test(ref.url))
-        );
+        const mainDiv = document.createElement('div');
+        mainDiv.className = 'd-flex justify-content-between align-items-start';
 
-        const affectedRanges = affected.length > 0
-          ? affected.map(a => {
-            const packageName = a.package?.name || name;
-            const ranges = a.ranges || [];
-            return ranges.map(r => {
-              if (r.type === 'ECOSYSTEM' && r.events) {
-                const events = r.events.map(e => {
-                  if (e.introduced) return `introduced: ${e.introduced}`;
-                  if (e.fixed) return `fixed: ${e.fixed}`;
-                  if (e.limit) return `limit: ${e.limit}`;
-                  return '';
-                }).filter(Boolean).join(', ');
-                return events ? `\`${packageName}\`: ${events}` : `\`${packageName}\``;
-              }
-              return '';
-            }).filter(Boolean).join('<br>');
-          }).filter(Boolean).join('<br>')
-          : '';
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'flex-grow-1';
 
-        const cwe = details.database_specific?.cwe || '';
-        const cvss = details.database_specific?.cvss?.vector_string || '';
-        const githubReviewStatus = details.database_specific?.github_review_status || '';
+        // Header with severity badge and package info
+        const header = document.createElement('h5');
+        header.className = 'mb-1';
 
-        item.innerHTML = `
-          <div class="d-flex justify-content-between align-items-start">
-            <div class="flex-grow-1">
-              <h5 class="mb-1">
-                <span class="badge bg-${severityBadge}">${escapeHtml(severity)}</span>
-                ${escapeHtml(name)}@${escapeHtml(version)}
-              </h5>
-              <p class="mb-2 text-body-secondary">${escapeHtml(summary)}</p>
-              ${description ? `<div class="mb-2 small text-body-secondary" style="max-height: 150px; overflow-y: auto;">${escapeHtml(description)}</div>` : ''}
-              <div class="mb-2">
-                <small class="text-muted d-block">ID: ${escapeHtml(vuln.id)}</small>
-                <small class="text-muted d-block">Published: ${escapeHtml(published)} | Modified: ${escapeHtml(modified)}</small>
-                ${cwe ? `<small class="text-muted d-block">CWE: ${escapeHtml(cwe)}</small>` : ''}
-                ${cvss ? `<small class="text-muted d-block">CVSS: ${escapeHtml(cvss)}</small>` : ''}
-                ${githubReviewStatus ? `<small class="text-muted d-block">Review Status: ${escapeHtml(githubReviewStatus)}</small>` : ''}
-              </div>
-              ${affectedRanges ? `<div class="mb-2"><small class="text-muted text-uppercase small fw-bold">Affected Versions:</small><br><small class="text-muted">${affectedRanges}</small></div>` : ''}
-              ${references.length > 0 ? `
-                <div class="mt-2">
-                  ${references.slice(0, 3).map(ref =>
-          `<a href="${ref.url}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary me-1 mb-1">${escapeHtml(ref.type || 'Reference')}</a>`
-        ).join('')}
-                </div>
-              ` : ''}
-            </div>
-            ${details.fixed_version ? `<span class="badge bg-success ms-2">Fixed: ${escapeHtml(details.fixed_version)}</span>` : ''}
-          </div>
-        `;
+        const severityBadgeEl = document.createElement('span');
+        severityBadgeEl.className = `badge bg-${severityBadge}`;
+        severityBadgeEl.textContent = severity;
+
+        header.appendChild(severityBadgeEl);
+        header.appendChild(document.createTextNode(` ${name}@${version}`));
+
+        contentDiv.appendChild(header);
+
+        // Summary
+        const summaryP = document.createElement('p');
+        summaryP.className = 'mb-2 text-body-secondary';
+        summaryP.textContent = summary;
+        contentDiv.appendChild(summaryP);
+
+        // Description (if available)
+        if (description) {
+          const descDiv = document.createElement('div');
+          descDiv.className = 'mb-2 small text-body-secondary';
+          descDiv.style.maxHeight = '150px';
+          descDiv.style.overflowY = 'auto';
+          descDiv.textContent = description;
+          contentDiv.appendChild(descDiv);
+        }
+
+        // Details section
+        const detailsDiv = document.createElement('div');
+        detailsDiv.className = 'mb-2';
+
+        const idSmall = document.createElement('small');
+        idSmall.className = 'text-muted d-block';
+        idSmall.textContent = `ID: ${vuln.id}`;
+        detailsDiv.appendChild(idSmall);
+
+        const datesSmall = document.createElement('small');
+        datesSmall.className = 'text-muted d-block';
+        datesSmall.textContent = `Published: ${published} | Modified: ${modified}`;
+        detailsDiv.appendChild(datesSmall);
+
+        if (cwe) {
+          const cweSmall = document.createElement('small');
+          cweSmall.className = 'text-muted d-block';
+          cweSmall.textContent = `CWE: ${cwe}`;
+          detailsDiv.appendChild(cweSmall);
+        }
+
+        if (cvss) {
+          const cvssSmall = document.createElement('small');
+          cvssSmall.className = 'text-muted d-block';
+          cvssSmall.textContent = `CVSS: ${cvss}`;
+          detailsDiv.appendChild(cvssSmall);
+        }
+
+        if (githubReviewStatus) {
+          const reviewSmall = document.createElement('small');
+          reviewSmall.className = 'text-muted d-block';
+          reviewSmall.textContent = `Review Status: ${githubReviewStatus}`;
+          detailsDiv.appendChild(reviewSmall);
+        }
+
+        contentDiv.appendChild(detailsDiv);
+
+        // Affected versions
+        if (affectedRanges) {
+          const affectedDiv = document.createElement('div');
+          affectedDiv.className = 'mb-2';
+
+          const affectedLabel = document.createElement('small');
+          affectedLabel.className = 'text-muted text-uppercase small fw-bold';
+          affectedLabel.textContent = 'Affected Versions:';
+          affectedDiv.appendChild(affectedLabel);
+          affectedDiv.appendChild(document.createElement('br'));
+
+          const affectedText = document.createElement('small');
+          affectedText.className = 'text-muted';
+          // Split by <br> and create separate elements
+          const ranges = affectedRanges.split('<br>');
+          ranges.forEach((range, index) => {
+            if (index > 0) {
+              affectedText.appendChild(document.createElement('br'));
+            }
+            affectedText.appendChild(document.createTextNode(range));
+          });
+          affectedDiv.appendChild(affectedText);
+
+          contentDiv.appendChild(affectedDiv);
+        }
+
+        // References
+        if (references.length > 0) {
+          const refDiv = document.createElement('div');
+          refDiv.className = 'mt-2';
+
+          references.slice(0, 3).forEach(ref => {
+            const link = document.createElement('a');
+            link.href = ref.url;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.className = 'btn btn-sm btn-outline-primary me-1 mb-1';
+            link.textContent = ref.type || 'Reference';
+            refDiv.appendChild(link);
+          });
+
+          contentDiv.appendChild(refDiv);
+        }
+
+        mainDiv.appendChild(contentDiv);
+
+        // Fixed version badge
+        if (details.fixed_version) {
+          const fixedBadge = document.createElement('span');
+          fixedBadge.className = 'badge bg-success ms-2';
+          fixedBadge.textContent = `Fixed: ${details.fixed_version}`;
+          mainDiv.appendChild(fixedBadge);
+        }
+
+        item.appendChild(mainDiv);
         vulnList.appendChild(item);
       }
     }

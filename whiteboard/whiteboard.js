@@ -9,11 +9,51 @@
   let lastX = 0;
   let lastY = 0;
 
+  const STORAGE_KEY = 'whiteboard-data';
+
+  // Load saved data from localStorage
+  function loadSavedData() {
+    const savedData = localStorage.getItem(STORAGE_KEY);
+    if (savedData) {
+      try {
+        const data = JSON.parse(savedData);
+        if (data.imageData) {
+          const img = new Image();
+          img.onload = function () {
+            ctx.drawImage(img, 0, 0);
+          };
+          img.src = data.imageData;
+        }
+        if (data.color) {
+          colorPicker.value = data.color;
+        }
+        if (data.penSize) {
+          penSizeSelect.value = data.penSize;
+        }
+      } catch (e) {
+        console.warn('Failed to load saved whiteboard data:', e);
+      }
+    }
+  }
+
+  // Save current state to localStorage
+  function saveCurrentState() {
+    const data = {
+      imageData: canvas.toDataURL(),
+      color: colorPicker.value,
+      penSize: penSizeSelect.value
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
   // Set initial canvas background to white
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Set initial pen properties
+  // Load saved data after canvas initialization
+  loadSavedData();
+
+  // Set initial pen properties (may be overridden by saved data)
   ctx.strokeStyle = colorPicker.value;
   ctx.lineWidth = penSizeSelect.value;
   ctx.lineCap = 'round';
@@ -38,6 +78,8 @@
 
   function stopDrawing() {
     isDrawing = false;
+    // Save the drawing state after finishing a stroke
+    saveCurrentState();
   }
 
   function getMousePos(e) {
@@ -50,15 +92,18 @@
 
   function updatePenColor() {
     ctx.strokeStyle = colorPicker.value;
+    saveCurrentState();
   }
 
   function updatePenSize() {
     ctx.lineWidth = penSizeSelect.value;
+    saveCurrentState();
   }
 
   function clearCanvas() {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    saveCurrentState();
   }
 
   // Event listeners
