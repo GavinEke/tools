@@ -13,7 +13,7 @@
     document.getElementById('summary').classList.add('d-none');
     document.getElementById('vulnerabilities').classList.add('d-none');
     document.getElementById('no-vulnerabilities').classList.add('d-none');
-    ocument.getElementById('loading').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('loading').scrollIntoView({ behavior: 'smooth' });
   }
 
   function hideLoading() {

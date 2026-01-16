@@ -1,10 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Domain RDAP Lookup - tools.gavin.cloud</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IOC Log Extraction</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css"
     integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -14,7 +14,7 @@
 <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="/">
+      <a class="navbar-brand fw-bold" href="../index.html">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
           class="bi bi-tools me-2">
@@ -49,26 +49,47 @@
 
   <main class="container py-5">
     <div class="row justify-content-center">
-      <div class="col-lg-8 col-md-10">
-        <div class="mb-4">
-          <h1 class="display-5 fw-bold text-body-emphasis">Domain RDAP Lookup</h1>
-          <p class="text-body-secondary">Perform RDAP lookups on domain names to retrieve registration information,
-            nameservers, and expiration dates.</p>
-        </div>
-
-        <div class="card mb-4">
+      <div class="col-lg-8">
+        <div class="card shadow">
+          <div class="card-header bg-primary text-white">
+            <h1 class="h4 mb-0">IOC Log Extraction Tool</h1>
+          </div>
           <div class="card-body">
+            <p class="text-muted">Upload a log file or paste content below to extract indicators of compromise (IPs,
+              domains, URLs).</p>
             <div class="mb-3">
-              <label for="domainInput" class="form-label fw-medium">Domain Name</label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="domainInput" placeholder="Enter domain (e.g. example.com)">
-                <button class="btn btn-primary" id="lookupBtn">Lookup</button>
-              </div>
+              <label for="log-file" class="form-label">Upload Log File</label>
+              <input type="file" class="form-control" id="log-file" accept=".txt,.log">
             </div>
+            <div class="mb-3">
+              <label for="log-input" class="form-label">Or Paste Log Content</label>
+              <textarea class="form-control" id="log-input" rows="10"
+                placeholder="Paste log content here..."></textarea>
+            </div>
+            <button type="button" class="btn btn-primary" id="extract-btn">Extract IOCs</button>
+            <button type="button" class="btn btn-secondary ms-2" id="clear-btn">Clear</button>
           </div>
         </div>
 
-        <div id="results" class="mt-3"></div>
+        <div class="card shadow mt-4" id="results-section" style="display: none;">
+          <div class="card-header bg-primary text-white">
+            <h2 class="h5 mb-0">Extracted Indicators</h2>
+          </div>
+          <div class="card-body">
+            <div id="ip-results" class="mb-3">
+              <h3 class="h6">IP Addresses</h3>
+              <div id="ip-list" class="list-group"></div>
+            </div>
+            <div id="domain-results" class="mb-3">
+              <h3 class="h6">Domains</h3>
+              <div id="domain-list" class="list-group"></div>
+            </div>
+            <div id="url-results" class="mb-3">
+              <h3 class="h6">URLs</h3>
+              <div id="url-list" class="list-group"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -85,7 +106,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js"
     integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="./domain-rdap.js"></script>
+  <script src="./ioc-log-extraction.js"></script>
 </body>
 
 </html>
+</content>
+<parameter name="filePath">ioc-log-extraction/index.html

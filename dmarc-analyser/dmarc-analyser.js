@@ -158,7 +158,11 @@
       outputSection.classList.remove('d-none');
       outputSection.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
-      resultsDiv.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+      const alertDiv = document.createElement('div');
+      alertDiv.className = 'alert alert-danger';
+      alertDiv.textContent = error.message;
+      resultsDiv.innerHTML = '';
+      resultsDiv.appendChild(alertDiv);
       outputSection.classList.remove('d-none');
       outputSection.scrollIntoView({ behavior: 'smooth' });
     }
