@@ -1,43 +1,53 @@
 (() => {
+  let currentTheme = "light";
+  const THEME_KEY = "site-theme";
   const MD5_ROUNDS = [
     [7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22],
     [5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20],
     [4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23],
-    [6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21]
+    [6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21],
   ];
 
   const MD5_K = [
-    0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
-    0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
-    0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
-    0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
-    0xf61e2562, 0xc040b340, 0x265e5a51, 0xe9b6c7aa,
-    0xd62f105d, 0x02441453, 0xd8a1e681, 0xe7d3fbc8,
-    0x21e1cde6, 0xc33707d6, 0xf4d50d87, 0x455a14ed,
-    0xa9e3e905, 0xfcefa3f8, 0x676f02d9, 0x8d2a4c8a,
-    0xfffa3942, 0x8771f681, 0x6d9d6122, 0xfde5380c,
-    0xa4beea44, 0x4bdecfa9, 0xf6bb4b60, 0xbebfbc70,
-    0x289b7ec6, 0xeaa127fa, 0xd4ef3085, 0x04881d05,
-    0xd9d4d039, 0xe6db99e5, 0x1fa27cf8, 0xc4ac5665,
-    0xf4292244, 0x432aff97, 0xab9423a7, 0xfc93a039,
-    0x655b59c3, 0x8f0ccc92, 0xffeff47d, 0x85845dd1,
-    0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
-    0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
+    0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee, 0xf57c0faf, 0x4787c62a,
+    0xa8304613, 0xfd469501, 0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
+    0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821, 0xf61e2562, 0xc040b340,
+    0x265e5a51, 0xe9b6c7aa, 0xd62f105d, 0x02441453, 0xd8a1e681, 0xe7d3fbc8,
+    0x21e1cde6, 0xc33707d6, 0xf4d50d87, 0x455a14ed, 0xa9e3e905, 0xfcefa3f8,
+    0x676f02d9, 0x8d2a4c8a, 0xfffa3942, 0x8771f681, 0x6d9d6122, 0xfde5380c,
+    0xa4beea44, 0x4bdecfa9, 0xf6bb4b60, 0xbebfbc70, 0x289b7ec6, 0xeaa127fa,
+    0xd4ef3085, 0x04881d05, 0xd9d4d039, 0xe6db99e5, 0x1fa27cf8, 0xc4ac5665,
+    0xf4292244, 0x432aff97, 0xab9423a7, 0xfc93a039, 0x655b59c3, 0x8f0ccc92,
+    0xffeff47d, 0x85845dd1, 0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
+    0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391,
   ];
 
-  function md5_f(x, y, z) { return (x & y) | ((~x) & z); }
-  function md5_g(x, y, z) { return (x & z) | (y & (~z)); }
-  function md5_h(x, y, z) { return x ^ y ^ z; }
-  function md5_i(x, y, z) { return y ^ (x | (~z)); }
+  function md5_f(x, y, z) {
+    return (x & y) | (~x & z);
+  }
+  function md5_g(x, y, z) {
+    return (x & z) | (y & ~z);
+  }
+  function md5_h(x, y, z) {
+    return x ^ y ^ z;
+  }
+  function md5_i(x, y, z) {
+    return y ^ (x | ~z);
+  }
 
-  function leftRotate(x, n) { return (x << n) | (x >>> (32 - n)); }
+  function leftRotate(x, n) {
+    return (x << n) | (x >>> (32 - n));
+  }
 
   function md5Round(a, b, c, d, x, s, t, func) {
     return leftRotate((func(b, c, d) + a + x + t) | 0, s) + b;
   }
 
   function md5ProcessBlock(block, state) {
-    let a = state[0], b = state[1], c = state[2], d = state[3];
+    let a = state[0],
+      b = state[1],
+      c = state[2],
+      d = state[3];
 
     a = md5Round(a, b, c, d, block[0], 7, MD5_K[0], md5_f);
     d = md5Round(d, a, b, c, block[1], 12, MD5_K[1], md5_f);
@@ -115,35 +125,34 @@
 
   function toLE32(num) {
     return [
-      (num) & 0xff,
+      num & 0xff,
       (num >> 8) & 0xff,
       (num >> 16) & 0xff,
-      (num >> 24) & 0xff
+      (num >> 24) & 0xff,
     ];
   }
 
   function fromLE32(bytes) {
     return (
-      (bytes[0]) |
-      (bytes[1] << 8) |
-      (bytes[2] << 16) |
-      (bytes[3] << 24)
-    ) >>> 0;
+      (bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24)) >>> 0
+    );
   }
 
   function toHex(bytes) {
-    return bytes.map(b => b.toString(16).padStart(2, '0')).join('');
+    return bytes.map((b) => b.toString(16).padStart(2, "0")).join("");
   }
 
   function md5(input) {
-    const isString = typeof input === 'string';
-    const data = isString ? new TextEncoder().encode(input) : new Uint8Array(input);
+    const isString = typeof input === "string";
+    const data = isString
+      ? new TextEncoder().encode(input)
+      : new Uint8Array(input);
     const bitLength = data.length * 8;
 
     let padded = [...data];
     padded.push(0x80);
 
-    while ((padded.length % 64) !== 56) {
+    while (padded.length % 64 !== 56) {
       padded.push(0);
     }
 
@@ -157,7 +166,14 @@
       const block = [];
       for (let j = 0; j < 16; j++) {
         const idx = i + j * 4;
-        block.push(fromLE32([padded[idx], padded[idx + 1], padded[idx + 2], padded[idx + 3]]));
+        block.push(
+          fromLE32([
+            padded[idx],
+            padded[idx + 1],
+            padded[idx + 2],
+            padded[idx + 3],
+          ]),
+        );
       }
       md5ProcessBlock(block, state);
     }
@@ -166,59 +182,68 @@
       ...toLE32(state[0]),
       ...toLE32(state[1]),
       ...toLE32(state[2]),
-      ...toLE32(state[3])
+      ...toLE32(state[3]),
     ];
 
     return toHex(result);
   }
 
   async function sha256(input) {
-    const isString = typeof input === 'string';
-    const data = isString ? new TextEncoder().encode(input) : new Uint8Array(input);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const isString = typeof input === "string";
+    const data = isString
+      ? new TextEncoder().encode(input)
+      : new Uint8Array(input);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
   }
 
   async function sha384(input) {
-    const isString = typeof input === 'string';
-    const data = isString ? new TextEncoder().encode(input) : new Uint8Array(input);
-    const hashBuffer = await crypto.subtle.digest('SHA-384', data);
+    const isString = typeof input === "string";
+    const data = isString
+      ? new TextEncoder().encode(input)
+      : new Uint8Array(input);
+    const hashBuffer = await crypto.subtle.digest("SHA-384", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
   }
 
   async function sha512(input) {
-    const isString = typeof input === 'string';
-    const data = isString ? new TextEncoder().encode(input) : new Uint8Array(input);
-    const hashBuffer = await crypto.subtle.digest('SHA-512', data);
+    const isString = typeof input === "string";
+    const data = isString
+      ? new TextEncoder().encode(input)
+      : new Uint8Array(input);
+    const hashBuffer = await crypto.subtle.digest("SHA-512", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
   }
 
   async function sha1(input) {
-    const isString = typeof input === 'string';
-    const data = isString ? new TextEncoder().encode(input) : new Uint8Array(input);
-    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+    const isString = typeof input === "string";
+    const data = isString
+      ? new TextEncoder().encode(input)
+      : new Uint8Array(input);
+    const hashBuffer = await crypto.subtle.digest("SHA-1", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
   }
 
   async function generateHashes(input) {
-    const [md5Result, sha1Result, sha256Result, sha384Result, sha512Result] = await Promise.all([
-      Promise.resolve(md5(input)),
-      sha1(input),
-      sha256(input),
-      sha384(input),
-      sha512(input)
-    ]);
+    const [md5Result, sha1Result, sha256Result, sha384Result, sha512Result] =
+      await Promise.all([
+        Promise.resolve(md5(input)),
+        sha1(input),
+        sha256(input),
+        sha384(input),
+        sha512(input),
+      ]);
 
     return [
-      { name: 'MD5', hash: md5Result, length: 128 },
-      { name: 'SHA-1', hash: sha1Result, length: 160 },
-      { name: 'SHA-256', hash: sha256Result, length: 256 },
-      { name: 'SHA-384', hash: sha384Result, length: 384 },
-      { name: 'SHA-512', hash: sha512Result, length: 512 }
+      { name: "MD5", hash: md5Result, length: 128 },
+      { name: "SHA-1", hash: sha1Result, length: 160 },
+      { name: "SHA-256", hash: sha256Result, length: 256 },
+      { name: "SHA-384", hash: sha384Result, length: 384 },
+      { name: "SHA-512", hash: sha512Result, length: 512 },
     ];
   }
 
@@ -230,8 +255,8 @@
           <span class="badge bg-light text-body-secondary">${hash.length}-bit</span>
         </div>
         <div class="input-group">
-          <input type="text" class="form-control font-monospace" value="${hash.hash}" readonly id="hash-${hash.name.toLowerCase().replace('-', '-')}">
-          <button type="button" class="btn btn-outline-secondary copy-hash-btn" data-target="hash-${hash.name.toLowerCase().replace('-', '-')}" title="Copy to clipboard">
+          <input type="text" class="form-control font-monospace" value="${hash.hash}" readonly id="hash-${hash.name.toLowerCase().replace("-", "-")}">
+          <button type="button" class="btn btn-outline-secondary copy-hash-btn" data-target="hash-${hash.name.toLowerCase().replace("-", "-")}" title="Copy to clipboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
               <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
               <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
@@ -244,31 +269,31 @@
 
   async function displayResults(input) {
     const hashes = await generateHashes(input);
-    const container = document.getElementById('hash-outputs');
-    container.innerHTML = hashes.map(createHashOutput).join('');
-    document.getElementById('hash-results').classList.remove('d-none');
+    const container = document.getElementById("hash-outputs");
+    container.innerHTML = hashes.map(createHashOutput).join("");
+    document.getElementById("hash-results").classList.remove("d-none");
   }
 
   async function generateHashesHandler() {
-    const textInput = document.getElementById('hash-input').value;
-    const fileInput = document.getElementById('file-input').files[0];
-    const activeTab = document.querySelector('#input-tabs .nav-link.active').id;
+    const textInput = document.getElementById("hash-input").value;
+    const fileInput = document.getElementById("file-input").files[0];
+    const activeTab = document.querySelector("#input-tabs .nav-link.active").id;
 
-    if (activeTab === 'text-tab' && textInput) {
+    if (activeTab === "text-tab" && textInput) {
       await displayResults(textInput);
-    } else if (activeTab === 'file-tab' && fileInput) {
+    } else if (activeTab === "file-tab" && fileInput) {
       const arrayBuffer = await fileInput.arrayBuffer();
       await displayResults(arrayBuffer);
     } else {
-      document.getElementById('hash-results').classList.add('d-none');
+      document.getElementById("hash-results").classList.add("d-none");
     }
   }
 
   function clearInput() {
-    document.getElementById('hash-input').value = '';
-    document.getElementById('file-input').value = '';
-    document.getElementById('file-info').classList.add('d-none');
-    document.getElementById('hash-results').classList.add('d-none');
+    document.getElementById("hash-input").value = "";
+    document.getElementById("file-input").value = "";
+    document.getElementById("file-info").classList.add("d-none");
+    document.getElementById("hash-results").classList.add("d-none");
   }
 
   async function copyToClipboard(targetId) {
@@ -276,42 +301,66 @@
     try {
       await navigator.clipboard.writeText(input.value);
       const btn = input.nextElementSibling;
-      const originalTitle = btn.getAttribute('title');
-      btn.setAttribute('title', 'Copied!');
-      setTimeout(() => btn.setAttribute('title', originalTitle), 1500);
+      const originalTitle = btn.getAttribute("title");
+      btn.setAttribute("title", "Copied!");
+      setTimeout(() => btn.setAttribute("title", originalTitle), 1500);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error("Failed to copy:", err);
     }
   }
 
-  function init() {
-    document.getElementById('generate-btn').addEventListener('click', generateHashesHandler);
-    document.getElementById('clear-btn').addEventListener('click', clearInput);
+  function setTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.dataset.bsTheme = theme;
+    localStorage.setItem(THEME_KEY, JSON.stringify({ theme }));
+  }
 
-    document.getElementById('hash-input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && e.ctrlKey) {
+  function init() {
+    const themeData = localStorage.getItem(THEME_KEY);
+    if (themeData) {
+      try {
+        const data = JSON.parse(themeData);
+        if (data.theme) currentTheme = data.theme;
+      } catch (e) {
+        console.warn("Failed to load theme:", e);
+      }
+    }
+    setTheme(currentTheme);
+
+    document
+      .getElementById("generate-btn")
+      .addEventListener("click", generateHashesHandler);
+    document.getElementById("clear-btn").addEventListener("click", clearInput);
+
+    document.getElementById("hash-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && e.ctrlKey) {
         generateHashesHandler();
       }
     });
 
-    document.getElementById('file-input').addEventListener('change', () => {
-      const file = document.getElementById('file-input').files[0];
-      const fileInfo = document.getElementById('file-info');
+    document.getElementById("file-input").addEventListener("change", () => {
+      const file = document.getElementById("file-input").files[0];
+      const fileInfo = document.getElementById("file-info");
       if (file) {
         fileInfo.textContent = `${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
-        fileInfo.classList.remove('d-none');
+        fileInfo.classList.remove("d-none");
       } else {
-        fileInfo.classList.add('d-none');
+        fileInfo.classList.add("d-none");
       }
     });
 
-    document.addEventListener('click', (e) => {
-      if (e.target.closest('.copy-hash-btn')) {
-        const btn = e.target.closest('.copy-hash-btn');
+    document.addEventListener("click", (e) => {
+      if (e.target.closest(".copy-hash-btn")) {
+        const btn = e.target.closest(".copy-hash-btn");
         copyToClipboard(btn.dataset.target);
       }
     });
   }
 
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener("DOMContentLoaded", init);
+
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    const newTheme = currentTheme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+  });
 })();

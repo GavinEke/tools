@@ -15,7 +15,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background-color: var(--bs-body-bg);
 }
 
 main {
@@ -44,13 +44,13 @@ main {
 .tool-card {
   border: 1px solid var(--card-border);
   border-radius: 12px;
-  background-color: #fff;
+  background-color: var(--bs-body-bg);
   transition: all 0.2s ease;
 }
 
 .tool-card:hover {
   border-color: var(--primary-color);
-  background-color: var(--card-hover-bg);
+  background-color: var(--bs-body-bg);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
@@ -72,7 +72,7 @@ main {
 }
 
 .card-title {
-  color: #1f2937;
+  color: var(--bs-body-color);
   margin-bottom: 0.5rem;
 }
 
@@ -82,8 +82,8 @@ main {
 }
 
 footer {
-  background-color: var(--footer-bg);
-  border-top: 1px solid var(--card-border);
+  background-color: var(--bs-body-bg);
+  border-top: 1px solid var(--bs-border-color);
 }
 
 footer a {
@@ -96,21 +96,23 @@ footer a:hover {
 }
 
 code {
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', 'Source Code Pro', monospace;
+  font-family:
+    "SF Mono", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono",
+    "Source Code Pro", monospace;
   font-size: 0.85rem;
-  background-color: #f8fafc;
+  background-color: var(--bs-body-bg);
   padding: 0.125rem 0.375rem;
   border-radius: 4px;
 }
 
 .table th {
   font-weight: 500;
-  color: #4b5563;
+  color: var(--bs-body-color);
   border-bottom-width: 1px;
 }
 
 .table td {
-  color: #1f2937;
+  color: var(--bs-body-color);
 }
 
 @media (max-width: 576px) {
@@ -179,7 +181,7 @@ code {
 .diff-line {
   padding: 4px 8px;
   margin: 2px 0;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   white-space: pre-wrap;
 }
 

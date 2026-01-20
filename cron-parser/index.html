@@ -1,107 +1,177 @@
 <!doctype html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en" data-bs-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cron Parser - tools.gavin.cloud</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css"
-        integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/assets/css/styles.css">
-</head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css"
+      integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <script>
+      try {
+        const theme = JSON.parse(
+          localStorage.getItem("site-theme") || "{}",
+        ).theme;
+        if (theme) document.documentElement.dataset.bsTheme = theme;
+      } catch (e) {}
+    </script>
+  </head>
 
-<body>
+  <body>
     <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="bi bi-tools me-2">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 2a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 0 0-9z" />
-                    <path d="M8 8l8-4 1 2-3 6-2-1Z" />
-                    <path d="M4 11l2 1" />
-                    <path d="M14 8l-2 4" />
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="/">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="bi bi-tools me-2"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 2a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 0 0-9z" />
+            <path d="M8 8l8-4 1 2-3 6-2-1Z" />
+            <path d="M4 11l2 1" />
+            <path d="M14 8l-2 4" />
+          </svg>
+          tools.gavin.cloud
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
+            <li class="nav-item">
+              <button type="button" class="nav-link me-2" id="theme-toggle">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                  class="me-1"
+                >
+                  <path
+                    d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193-9.193a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707l-1.414-1.414a.5.5 0 0 1 0-.707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"
+                  />
                 </svg>
-                tools.gavin.cloud
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://github.com/GavinEke/tools" target="_blank" rel="noopener">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                viewBox="0 0 16 16" class="me-1">
-                                <path
-                                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
-                            </svg>
-                            GitHub
-                        </a>
-                    </li>
-                </ul>
-            </div>
+                Theme
+              </button>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://github.com/GavinEke/tools"
+                target="_blank"
+                rel="noopener"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                  class="me-1"
+                >
+                  <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+                  />
+                </svg>
+                GitHub
+              </a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <main class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
-                <div class="mb-4">
-                    <h1 class="display-5 fw-bold text-body-emphasis">Cron Parser</h1>
-                    <p class="text-body-secondary">Parse and explain cron expressions with validation and next run
-                        times.</p>
-                </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+          <div class="mb-4">
+            <h1 class="display-5 fw-bold text-body-emphasis">Cron Parser</h1>
+            <p class="text-body-secondary">
+              Parse and explain cron expressions with validation and next run
+              times.
+            </p>
+          </div>
 
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <form id="cronForm">
-                            <div class="mb-3">
-                                <label for="cronInput" class="form-label fw-medium">Cron Expression</label>
-                                <input type="text" class="form-control" id="cronInput"
-                                    placeholder="e.g., */15 9-17 * * 1-5" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Parse</button>
-                        </form>
-                    </div>
+          <div class="card mb-4">
+            <div class="card-body">
+              <form id="cronForm">
+                <div class="mb-3">
+                  <label for="cronInput" class="form-label fw-medium"
+                    >Cron Expression</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cronInput"
+                    placeholder="e.g., */15 9-17 * * 1-5"
+                    required
+                  />
                 </div>
-
-                <div id="results" class="d-none">
-                    <div class="card">
-                        <div class="card-body">
-                            <div id="validation" class="alert"></div>
-                            <div id="explanation" class="mb-3">
-                                <h5 class="fw-medium">Explanation</h5>
-                                <div id="explanationBody"></div>
-                            </div>
-                            <div id="nextRuns">
-                                <h5 class="fw-medium">Next Run Times</h5>
-                                <ul id="nextRunsBody" class="list-unstyled"></ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <button type="submit" class="btn btn-primary">Parse</button>
+              </form>
             </div>
+          </div>
+
+          <div id="results" class="d-none">
+            <div class="card">
+              <div class="card-body">
+                <div id="validation" class="alert"></div>
+                <div id="explanation" class="mb-3">
+                  <h5 class="fw-medium">Explanation</h5>
+                  <div id="explanationBody"></div>
+                </div>
+                <div id="nextRuns">
+                  <h5 class="fw-medium">Next Run Times</h5>
+                  <ul id="nextRunsBody" class="list-unstyled"></ul>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </main>
 
     <footer class="py-4 mt-auto">
-        <div class="container">
-            <div class="text-center">
-                <span class="text-body-secondary small">Made with AI & ❤️ by <a href="https://gavineke.com"
-                        target="_blank" rel="noopener">Gavin Eke</a></span>
-            </div>
+      <div class="container">
+        <div class="text-center">
+          <span class="text-body-secondary small"
+            >Made with AI & ❤️ by
+            <a href="https://gavineke.com" target="_blank" rel="noopener"
+              >Gavin Eke</a
+            ></span
+          >
         </div>
+      </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js"
-        integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js"
+      integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <script src="./cron-parser.js"></script>
-</body>
-
+  </body>
 </html>

@@ -1,15 +1,20 @@
 (() => {
+  let currentTheme = "light";
+  const THEME_KEY = "site-theme";
   function convertTimestampToDate() {
-    const timestamp = parseFloat(document.getElementById('timestamp-input').value);
-    const type = document.getElementById('timestamp-type').value;
+    const timestamp = parseFloat(
+      document.getElementById("timestamp-input").value,
+    );
+    const type = document.getElementById("timestamp-type").value;
 
     if (isNaN(timestamp)) {
-      document.getElementById('date-output').innerHTML = '<div class="text-danger">Please enter a valid timestamp</div>';
+      document.getElementById("date-output").innerHTML =
+        '<div class="text-danger">Please enter a valid timestamp</div>';
       return;
     }
 
     let ms;
-    if (type === 'seconds') {
+    if (type === "seconds") {
       ms = timestamp * 1000;
     } else {
       ms = timestamp;
@@ -18,7 +23,8 @@
     const date = new Date(ms);
 
     if (isNaN(date.getTime())) {
-      document.getElementById('date-output').innerHTML = '<div class="text-danger">Invalid timestamp</div>';
+      document.getElementById("date-output").innerHTML =
+        '<div class="text-danger">Invalid timestamp</div>';
       return;
     }
 
@@ -65,12 +71,12 @@
       </div>
     `;
 
-    document.getElementById('date-output').innerHTML = output;
+    document.getElementById("date-output").innerHTML = output;
   }
 
   function convertDateToTimestamp() {
-    const dateInput = document.getElementById('date-input').value;
-    const isoInput = document.getElementById('iso-input').value.trim();
+    const dateInput = document.getElementById("date-input").value;
+    const isoInput = document.getElementById("iso-input").value.trim();
 
     let date;
     if (dateInput) {
@@ -78,12 +84,14 @@
     } else if (isoInput) {
       date = new Date(isoInput);
     } else {
-      document.getElementById('timestamp-output').innerHTML = '<div class="text-danger">Please enter a date</div>';
+      document.getElementById("timestamp-output").innerHTML =
+        '<div class="text-danger">Please enter a date</div>';
       return;
     }
 
     if (isNaN(date.getTime())) {
-      document.getElementById('timestamp-output').innerHTML = '<div class="text-danger">Invalid date format</div>';
+      document.getElementById("timestamp-output").innerHTML =
+        '<div class="text-danger">Invalid date format</div>';
       return;
     }
 
@@ -125,69 +133,105 @@
       </div>
     `;
 
-    document.getElementById('timestamp-output').innerHTML = output;
+    document.getElementById("timestamp-output").innerHTML = output;
   }
 
   function setCurrentTimestamp() {
     const now = Date.now();
-    document.getElementById('timestamp-input').value = Math.floor(now / 1000);
+    document.getElementById("timestamp-input").value = Math.floor(now / 1000);
     convertTimestampToDate();
   }
 
   function setCurrentDate() {
     const now = new Date();
     const iso = now.toISOString().slice(0, 16); // Remove seconds and Z
-    document.getElementById('date-input').value = iso;
+    document.getElementById("date-input").value = iso;
     convertDateToTimestamp();
   }
 
   function clearTimestamp() {
-    document.getElementById('timestamp-input').value = '';
-    document.getElementById('date-output').innerHTML = '<div class="text-body-secondary">Converted date will appear here</div>';
+    document.getElementById("timestamp-input").value = "";
+    document.getElementById("date-output").innerHTML =
+      '<div class="text-body-secondary">Converted date will appear here</div>';
   }
 
   function clearDate() {
-    document.getElementById('date-input').value = '';
-    document.getElementById('iso-input').value = '';
-    document.getElementById('timestamp-output').innerHTML = '<div class="text-body-secondary">Converted timestamps will appear here</div>';
+    document.getElementById("date-input").value = "";
+    document.getElementById("iso-input").value = "";
+    document.getElementById("timestamp-output").innerHTML =
+      '<div class="text-body-secondary">Converted timestamps will appear here</div>';
   }
 
-  function init() {
-    document.getElementById('convert-ts-btn').addEventListener('click', convertTimestampToDate);
-    document.getElementById('current-ts-btn').addEventListener('click', setCurrentTimestamp);
-    document.getElementById('clear-ts-btn').addEventListener('click', clearTimestamp);
+  function setTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.dataset.bsTheme = theme;
+    localStorage.setItem(THEME_KEY, JSON.stringify({ theme }));
+  }
 
-    document.getElementById('convert-date-btn').addEventListener('click', convertDateToTimestamp);
-    document.getElementById('now-btn').addEventListener('click', setCurrentDate);
-    document.getElementById('clear-date-btn').addEventListener('click', clearDate);
+  const themeData = localStorage.getItem(THEME_KEY);
+  if (themeData) {
+    try {
+      const data = JSON.parse(themeData);
+      if (data.theme) currentTheme = data.theme;
+    } catch (e) {
+      console.warn("Failed to load theme:", e);
+    }
+  }
+  setTheme(currentTheme);
+
+  function init() {
+    document
+      .getElementById("convert-ts-btn")
+      .addEventListener("click", convertTimestampToDate);
+    document
+      .getElementById("current-ts-btn")
+      .addEventListener("click", setCurrentTimestamp);
+    document
+      .getElementById("clear-ts-btn")
+      .addEventListener("click", clearTimestamp);
+
+    document
+      .getElementById("convert-date-btn")
+      .addEventListener("click", convertDateToTimestamp);
+    document
+      .getElementById("now-btn")
+      .addEventListener("click", setCurrentDate);
+    document
+      .getElementById("clear-date-btn")
+      .addEventListener("click", clearDate);
 
     // Auto-convert on input change
-    document.getElementById('timestamp-input').addEventListener('input', () => {
-      if (document.getElementById('timestamp-input').value) {
+    document.getElementById("timestamp-input").addEventListener("input", () => {
+      if (document.getElementById("timestamp-input").value) {
         convertTimestampToDate();
       } else {
         clearTimestamp();
       }
     });
 
-    document.getElementById('date-input').addEventListener('input', () => {
-      if (document.getElementById('date-input').value) {
+    document.getElementById("date-input").addEventListener("input", () => {
+      if (document.getElementById("date-input").value) {
         convertDateToTimestamp();
       }
     });
 
-    document.getElementById('iso-input').addEventListener('input', () => {
-      if (document.getElementById('iso-input').value) {
+    document.getElementById("iso-input").addEventListener("input", () => {
+      if (document.getElementById("iso-input").value) {
         convertDateToTimestamp();
       }
     });
 
-    document.getElementById('timestamp-type').addEventListener('change', () => {
-      if (document.getElementById('timestamp-input').value) {
+    document.getElementById("timestamp-type").addEventListener("change", () => {
+      if (document.getElementById("timestamp-input").value) {
         convertTimestampToDate();
       }
     });
   }
 
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener("DOMContentLoaded", init);
+
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    const newTheme = currentTheme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+  });
 })();

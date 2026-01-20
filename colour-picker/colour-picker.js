@@ -1,21 +1,25 @@
 (() => {
-  const colorPicker = document.getElementById('color-picker');
-  const colorSwatch = document.getElementById('color-swatch');
-  const hexInput = document.getElementById('hex-input');
-  const rgbInput = document.getElementById('rgb-input');
-  const hslInput = document.getElementById('hsl-input');
-  const copyHexBtn = document.getElementById('copy-hex');
-  const copyRgbBtn = document.getElementById('copy-rgb');
-  const copyHslBtn = document.getElementById('copy-hsl');
+  let currentTheme = "light";
+  const THEME_KEY = "site-theme";
+  const colorPicker = document.getElementById("color-picker");
+  const colorSwatch = document.getElementById("color-swatch");
+  const hexInput = document.getElementById("hex-input");
+  const rgbInput = document.getElementById("rgb-input");
+  const hslInput = document.getElementById("hsl-input");
+  const copyHexBtn = document.getElementById("copy-hex");
+  const copyRgbBtn = document.getElementById("copy-rgb");
+  const copyHslBtn = document.getElementById("copy-hsl");
 
   // Color conversion functions
   function hexToRgb(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+      : null;
   }
 
   function rgbToHex(r, g, b) {
@@ -29,7 +33,9 @@
 
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
+    let h,
+      s,
+      l = (max + min) / 2;
 
     if (max === min) {
       h = s = 0; // achromatic
@@ -37,9 +43,15 @@
       const d = max - min;
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
       switch (max) {
-        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / d + 2; break;
-        case b: h = (r - g) / d + 4; break;
+        case r:
+          h = (g - b) / d + (g < b ? 6 : 0);
+          break;
+        case g:
+          h = (b - r) / d + 2;
+          break;
+        case b:
+          h = (r - g) / d + 4;
+          break;
       }
       h /= 6;
     }
@@ -47,7 +59,7 @@
     return {
       h: Math.round(h * 360),
       s: Math.round(s * 100),
-      l: Math.round(l * 100)
+      l: Math.round(l * 100),
     };
   }
 
@@ -80,26 +92,30 @@
     return {
       r: Math.round(r * 255),
       g: Math.round(g * 255),
-      b: Math.round(b * 255)
+      b: Math.round(b * 255),
     };
   }
 
   function parseRgbString(rgbStr) {
     const match = rgbStr.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-    return match ? {
-      r: parseInt(match[1]),
-      g: parseInt(match[2]),
-      b: parseInt(match[3])
-    } : null;
+    return match
+      ? {
+          r: parseInt(match[1]),
+          g: parseInt(match[2]),
+          b: parseInt(match[3]),
+        }
+      : null;
   }
 
   function parseHslString(hslStr) {
     const match = hslStr.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
-    return match ? {
-      h: parseInt(match[1]),
-      s: parseInt(match[2]),
-      l: parseInt(match[3])
-    } : null;
+    return match
+      ? {
+          h: parseInt(match[1]),
+          s: parseInt(match[2]),
+          l: parseInt(match[3]),
+        }
+      : null;
   }
 
   // Update all inputs based on hex value
@@ -146,26 +162,43 @@
     colorSwatch.style.backgroundColor = hex;
   }
 
+  function setTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.dataset.bsTheme = theme;
+    localStorage.setItem(THEME_KEY, JSON.stringify({ theme }));
+  }
+
+  const themeData = localStorage.getItem(THEME_KEY);
+  if (themeData) {
+    try {
+      const data = JSON.parse(themeData);
+      if (data.theme) currentTheme = data.theme;
+    } catch (e) {
+      console.warn("Failed to load theme:", e);
+    }
+  }
+  setTheme(currentTheme);
+
   // Event listeners
-  colorPicker.addEventListener('input', (e) => {
+  colorPicker.addEventListener("input", (e) => {
     updateFromHex(e.target.value);
   });
 
-  hexInput.addEventListener('input', (e) => {
+  hexInput.addEventListener("input", (e) => {
     const hex = e.target.value;
     if (/^#?[0-9a-fA-F]{6}$/.test(hex)) {
-      updateFromHex(hex.startsWith('#') ? hex : '#' + hex);
+      updateFromHex(hex.startsWith("#") ? hex : "#" + hex);
     }
   });
 
-  rgbInput.addEventListener('input', (e) => {
+  rgbInput.addEventListener("input", (e) => {
     const rgbStr = e.target.value;
     if (/^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/.test(rgbStr)) {
       updateFromRgb(rgbStr);
     }
   });
 
-  hslInput.addEventListener('input', (e) => {
+  hslInput.addEventListener("input", (e) => {
     const hslStr = e.target.value;
     if (/^hsl\(\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%\)$/.test(hslStr)) {
       updateFromHsl(hslStr);
@@ -178,22 +211,27 @@
       await navigator.clipboard.writeText(text);
       // Could add a toast notification here
     } catch (err) {
-      console.error('Failed to copy text: ', err);
+      console.error("Failed to copy text: ", err);
     }
   }
 
-  copyHexBtn.addEventListener('click', () => {
+  copyHexBtn.addEventListener("click", () => {
     copyToClipboard(hexInput.value);
   });
 
-  copyRgbBtn.addEventListener('click', () => {
+  copyRgbBtn.addEventListener("click", () => {
     copyToClipboard(rgbInput.value);
   });
 
-  copyHslBtn.addEventListener('click', () => {
+  copyHslBtn.addEventListener("click", () => {
     copyToClipboard(hslInput.value);
   });
 
   // Initialize with default color
-  updateFromHex('#2563eb');
+  updateFromHex("#2563eb");
+
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    const newTheme = currentTheme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+  });
 })();

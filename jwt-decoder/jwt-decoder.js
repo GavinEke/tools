@@ -1,13 +1,18 @@
 (() => {
+  let currentTheme = "light";
+  const THEME_KEY = "site-theme";
   function base64UrlDecode(str) {
-    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    let base64 = str.replace(/-/g, "+").replace(/_/g, "/");
     while (base64.length % 4) {
-      base64 += '=';
+      base64 += "=";
     }
     try {
-      return decodeURIComponent(atob(base64).split('').map(c =>
-        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-      ).join(''));
+      return decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(""),
+      );
     } catch (e) {
       return atob(base64);
     }
@@ -23,16 +28,18 @@
   }
 
   function formatTimestamp(ts) {
-    if (!ts) return '-';
+    if (!ts) return "-";
     const date = new Date(ts * 1000);
-    if (isNaN(date.getTime())) return '-';
+    if (isNaN(date.getTime())) return "-";
     return date.toLocaleString();
   }
 
   function decodeJwt(token) {
-    const parts = token.trim().split('.');
+    const parts = token.trim().split(".");
     if (parts.length !== 3) {
-      throw new Error('Invalid JWT format. Expected 3 parts separated by dots.');
+      throw new Error(
+        "Invalid JWT format. Expected 3 parts separated by dots.",
+      );
     }
 
     const [headerB64, payloadB64, signatureB64] = parts;
@@ -42,7 +49,7 @@
       header = base64UrlDecode(headerB64);
       payload = base64UrlDecode(payloadB64);
     } catch (e) {
-      throw new Error('Failed to decode Base64URL content: ' + e.message);
+      throw new Error("Failed to decode Base64URL content: " + e.message);
     }
 
     return {
@@ -52,28 +59,28 @@
       raw: {
         header: headerB64,
         payload: payloadB64,
-        signature: signatureB64
-      }
+        signature: signatureB64,
+      },
     };
   }
 
   function showError(message) {
-    const errorContainer = document.getElementById('error-container');
+    const errorContainer = document.getElementById("error-container");
     errorContainer.textContent = message;
-    errorContainer.classList.remove('d-none');
-    document.getElementById('decoded-result').classList.add('d-none');
+    errorContainer.classList.remove("d-none");
+    document.getElementById("decoded-result").classList.add("d-none");
   }
 
   function hideError() {
-    document.getElementById('error-container').classList.add('d-none');
+    document.getElementById("error-container").classList.add("d-none");
   }
 
   function displayResult(decoded) {
-    document.getElementById('header-code').textContent = decoded.header;
-    document.getElementById('payload-code').textContent = decoded.payload;
-    document.getElementById('signature-code').textContent = decoded.signature;
+    document.getElementById("header-code").textContent = decoded.header;
+    document.getElementById("payload-code").textContent = decoded.payload;
+    document.getElementById("signature-code").textContent = decoded.signature;
 
-    const infoTable = document.getElementById('token-info-table');
+    const infoTable = document.getElementById("token-info-table");
     let headerObj, payloadObj;
     try {
       headerObj = JSON.parse(decoded.header);
@@ -83,13 +90,13 @@
       payloadObj = {};
     }
 
-    const alg = headerObj.alg || '-';
-    const typ = headerObj.typ || '-';
-    const sub = payloadObj.sub || '-';
-    const iss = payloadObj.iss || payloadObj.issuer || '-';
-    const exp = payloadObj.exp ? formatTimestamp(payloadObj.exp) : '-';
-    const iat = payloadObj.iat ? formatTimestamp(payloadObj.iat) : '-';
-    const aud = payloadObj.aud || payloadObj.audience || '-';
+    const alg = headerObj.alg || "-";
+    const typ = headerObj.typ || "-";
+    const sub = payloadObj.sub || "-";
+    const iss = payloadObj.iss || payloadObj.issuer || "-";
+    const exp = payloadObj.exp ? formatTimestamp(payloadObj.exp) : "-";
+    const iat = payloadObj.iat ? formatTimestamp(payloadObj.iat) : "-";
+    const aud = payloadObj.aud || payloadObj.audience || "-";
 
     infoTable.innerHTML = `
       <tr>
@@ -110,7 +117,7 @@
       </tr>
       <tr>
         <td class="text-muted">Audience</td>
-        <td>${Array.isArray(aud) ? aud.join(', ') : aud}</td>
+        <td>${Array.isArray(aud) ? aud.join(", ") : aud}</td>
       </tr>
       <tr>
         <td class="text-muted">Issued At</td>
@@ -122,13 +129,13 @@
       </tr>
     `;
 
-    document.getElementById('decoded-result').classList.remove('d-none');
+    document.getElementById("decoded-result").classList.remove("d-none");
   }
 
   function decodeToken() {
-    const token = document.getElementById('jwt-input').value.trim();
+    const token = document.getElementById("jwt-input").value.trim();
     if (!token) {
-      showError('Please enter a JWT token to decode.');
+      showError("Please enter a JWT token to decode.");
       return;
     }
 
@@ -143,21 +150,45 @@
   }
 
   function clearInput() {
-    document.getElementById('jwt-input').value = '';
+    document.getElementById("jwt-input").value = "";
     hideError();
-    document.getElementById('decoded-result').classList.add('d-none');
+    document.getElementById("decoded-result").classList.add("d-none");
   }
 
-  function init() {
-    document.getElementById('decode-btn').addEventListener('click', decodeToken);
-    document.getElementById('clear-btn').addEventListener('click', clearInput);
+  function setTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.dataset.bsTheme = theme;
+    localStorage.setItem(THEME_KEY, JSON.stringify({ theme }));
+  }
 
-    document.getElementById('jwt-input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && e.ctrlKey) {
+  const themeData = localStorage.getItem(THEME_KEY);
+  if (themeData) {
+    try {
+      const data = JSON.parse(themeData);
+      if (data.theme) currentTheme = data.theme;
+    } catch (e) {
+      console.warn("Failed to load theme:", e);
+    }
+  }
+  setTheme(currentTheme);
+
+  function init() {
+    document
+      .getElementById("decode-btn")
+      .addEventListener("click", decodeToken);
+    document.getElementById("clear-btn").addEventListener("click", clearInput);
+
+    document.getElementById("jwt-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && e.ctrlKey) {
         decodeToken();
       }
     });
   }
 
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener("DOMContentLoaded", init);
+
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    const newTheme = currentTheme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+  });
 })();
