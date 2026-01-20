@@ -1,4 +1,6 @@
 (() => {
+  let currentTheme = "light";
+  const THEME_KEY = "site-theme";
   const API_URL = "https://cloudflare-dns.com/dns-query";
 
   function isValidDomain(domain) {
@@ -110,6 +112,23 @@
     }
   }
 
+  function setTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.dataset.bsTheme = theme;
+    localStorage.setItem(THEME_KEY, JSON.stringify({ theme }));
+  }
+
+  const themeData = localStorage.getItem(THEME_KEY);
+  if (themeData) {
+    try {
+      const data = JSON.parse(themeData);
+      if (data.theme) currentTheme = data.theme;
+    } catch (e) {
+      console.warn("Failed to load theme:", e);
+    }
+  }
+  setTheme(currentTheme);
+
   function init() {
     document
       .getElementById("lookup-btn")
@@ -124,4 +143,9 @@
   }
 
   document.addEventListener("DOMContentLoaded", init);
+
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    const newTheme = currentTheme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+  });
 })();

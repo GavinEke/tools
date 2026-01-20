@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="techGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00e5ff"/>
+      <stop offset="100%" stop-color="#2962ff"/>
+    </linearGradient>
+    <style>
+      .outline { fill: none; stroke: url(#techGradient); stroke-width: 11; }
+      .node { fill: #00e5ff; }
+      .line { stroke: #00e5ff; stroke-width: 14; stroke-linecap: round; }
+      .prompt { fill: #ffffff; font-family: monospace; font-size: 144px; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- Hexagon -->
+  <polygon
+    class="outline"
+    points="256,40 430,140 430,340 256,440 82,340 82,140"
+  />
+
+  <!-- Circuit lines -->
+  <line class="line" x1="256" y1="120" x2="256" y2="200"/>
+  <line class="line" x1="122" y1="240" x2="200" y2="240"/>
+  <line class="line" x1="332" y1="240" x2="392" y2="240"/>
+  <line class="line" x1="256" y1="280" x2="256" y2="360"/>
+
+  <!-- Circuit nodes -->
+  <circle class="node" cx="256" cy="120" r="14"/>
+  <circle class="node" cx="122" cy="240" r="14"/>
+  <circle class="node" cx="392" cy="240" r="14"/>
+  <circle class="node" cx="256" cy="360" r="14"/>
+
+  <!-- Terminal prompt -->
+  <text class="prompt" x="176" y="285">&gt;_</text>
+
+</svg>

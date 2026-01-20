@@ -46,7 +46,7 @@ Each tool must live in its **own folder** at the repository root.
 │       └── main.js       # Shared global JS (optional usage)
 ├── <tool-name>/
 │   └── index.html        # Tool UI
-│   └── <tool-name>.js    # Tool logic
+│   └── script.js         # Tool logic
 
 ### Rules
 
@@ -60,26 +60,114 @@ Each tool must live in its **own folder** at the repository root.
 
 ## HTML Rules
 
-Each tool’s `index.html` must:
-
-1. Load **Bootstrap 5 CSS**
-2. Load the **shared global stylesheet**
-3. Load **Bootstrap 5 JS**
-4. Load its **tool-specific JS file**
-
-
-### Required `<head>` Example
+Each tool’s `index.html` must use the following layout:
 
 ```html
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css" integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="/assets/css/styles.css">
-```
+<html lang="en" data-bs-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{INSERT TOOL NAME}} - tools.gavin.cloud</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css"
+      integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <script>
+      try {
+        const theme = JSON.parse(
+          localStorage.getItem("site-theme") || "{}",
+        ).theme;
+        if (theme) document.documentElement.dataset.bsTheme = theme;
+      } catch (e) {}
+    </script>
+  </head>
 
-### Required `<body>` Footer Example
+  <body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="/">
+          <img
+            src="/assets/svg/logo.svg"
+            width="30"
+            height="30"
+            class="bi bi-tools me-2"
+          />
+          tools.gavin.cloud
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
+            <li class="nav-item">
+              <button type="button" class="nav-link me-2" id="theme-toggle">
+                <img
+                  src="/assets/svg/theme-light-dark.svg"
+                  width="18"
+                  height="18"
+                  class="me-1"
+                />
+                Theme
+              </button>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://github.com/GavinEke/tools"
+                target="_blank"
+                rel="noopener"
+              >
+                <img
+                  src="/assets/svg/GitHub.svg"
+                  width="18"
+                  height="18"
+                  class="me-1"
+                />
+                GitHub
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main class="container py-5">
+...
+    </main>
 
-```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js" integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="./<tool-name>.js"></script>
+    <footer class="py-4 mt-auto">
+      <div class="container">
+        <div class="text-center">
+          <span class="text-body-secondary small"
+            >Made with AI & ❤️ by
+            <a href="https://gavineke.com" target="_blank" rel="noopener"
+              >Gavin Eke</a
+            ></span
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js"
+      integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="script.js"></script>
+  </body>
+</html>
 ```
 
 ---
@@ -108,7 +196,7 @@ Use generic, purpose-based names:
 ## JavaScript Rules
 
 - Each tool’s JS must live in:
-  `<tool-name>/<tool-name>.js`
+  `<tool-name>/script.js`
 - No inline JavaScript in HTML
 - No global variable pollution
 - Wrap logic in an IIFE or module-style pattern
@@ -225,9 +313,10 @@ When generating a new tool, an AI agent must:
 
 1. Create a new tool folder
 2. Follow all structure and naming rules
-3. Use Bootstrap and shared styles correctly
-4. Ensure the tool works when opened directly in a browser
-5. Keep code readable and commented
+3. Use the required HTML layout with script.js for JavaScript
+4. Use Bootstrap and shared styles correctly
+5. Ensure the tool works when opened directly in a browser
+6. Keep code readable and commented
 
 Failure to follow these rules means the tool should be rejected.
 

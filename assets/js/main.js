@@ -99,7 +99,7 @@ function createRecentToolCard(tool) {
   toolIcon.innerHTML = sanitizeSvg(tool.icon);
 
   const span = document.createElement("span");
-  span.className = "badge bg-secondary text-body-secondary small";
+  span.className = "badge bg-secondary small";
   span.textContent = formatDate(tool.dateAdded);
 
   dFlex.appendChild(toolIcon);
@@ -142,7 +142,7 @@ function createUpdatedToolCard(tool) {
   toolIcon.innerHTML = sanitizeSvg(tool.icon);
 
   const span = document.createElement("span");
-  span.className = "badge bg-secondary text-body-secondary small";
+  span.className = "badge bg-secondary small";
   span.textContent = formatDate(tool.dateUpdated);
 
   dFlex.appendChild(toolIcon);
@@ -296,4 +296,31 @@ function initSearch(totalTools) {
   initAllTools(totalTools);
   initSearch(totalTools);
   initCategoryFilters(totalTools);
+})();
+
+(function () {
+  let currentTheme = "light";
+  const THEME_KEY = "site-theme";
+
+  function setTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.dataset.bsTheme = theme;
+    localStorage.setItem(THEME_KEY, JSON.stringify({ theme }));
+  }
+
+  const themeData = localStorage.getItem(THEME_KEY);
+  if (themeData) {
+    try {
+      const data = JSON.parse(themeData);
+      if (data.theme) currentTheme = data.theme;
+    } catch (e) {
+      console.warn("Failed to load theme:", e);
+    }
+  }
+  setTheme(currentTheme);
+
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    const newTheme = currentTheme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+  });
 })();
